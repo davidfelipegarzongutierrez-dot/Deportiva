@@ -1,0 +1,56 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Reserva</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card" style="max-width: 500px; margin: auto; margin-top: 60px;">
+
+        <h1>Reservar: {{ cancha.nombre }}</h1>
+
+        <!-- ERRORES -->
+        {% if form.errors %}
+            <div class="card" style="border:1px solid red;">
+                <strong>⚠ Errores:</strong>
+                {{ form.errors }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <input type="hidden" name="cancha" value="{{ cancha.id }}">
+
+            {{ form.fecha.label }}<br>
+            {{ form.fecha }}<br><br>
+
+            {{ form.hora_inicio.label }}<br>
+            {{ form.hora_inicio }}<br><br>
+
+            {{ form.hora_fin.label }}<br>
+            {{ form.hora_fin }}<br><br>
+
+            {{ form.tipo.label }}<br>
+            {{ form.tipo }}<br><br>
+
+            {{ form.capacidad.label }}<br>
+            {{ form.capacidad }}<br><br>
+
+            <button type="submit">Crear Reserva</button>
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Canchas disponibles</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Canchas disponibles</h1>
+
+    <!-- PDF -->
+    <div class="card">
+        <a class="btn" href="{% url 'reporte_canchas_pdf' %}">
+            Descargar PDF
+        </a>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="card">
+        <h3>Filtros</h3>
+
+        <form method="get">
+
+            <label>Deporte</label>
+            <select name="deporte">
+                <option value="">Todos</option>
+                <option value="futbol">Fútbol</option>
+                <option value="baloncesto">Baloncesto</option>
+                <option value="tenis">Tenis</option>
+            </select>
+
+            <br><br>
+
+            <label>Precio máximo</label>
+            <input type="number" name="precio_max">
+
+            <br><br>
+
+            <label>
+                <input type="checkbox" name="disponible">
+                Solo disponibles
+            </label>
+
+            <br><br>
+
+            <button type="submit">Filtrar</button>
+
+        </form>
+    </div>
+
+    <!-- ADMIN -->
+    {% if user.is_superuser %}
+    <div class="card">
+        <a class="btn" href="{% url 'crear_cancha' %}">
+            Crear cancha
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- LISTA -->
+    {% for cancha in canchas %}
+
+    <div class="card">
+
+        <h3>{{ cancha.nombre }}</h3>
+
+        <p>Deporte: {{ cancha.deporte }}</p>
+        <p>Precio: ${{ cancha.precio_por_hora }}</p>
+
+        <a class="btn" href="{% url 'crear_reserva_desde_cancha' cancha.id %}">
+            Reservar
+        </a>
+
+        {% if user.is_superuser %}
+            <a class="btn" href="{% url 'editar_cancha' cancha.id %}">
+                Editar
+            </a>
+
+            <a class="btn" style="background:#dc2626;" href="{% url 'eliminar_cancha' cancha.id %}">
+                Eliminar
+            </a>
+        {% endif %}
+
+    </div>
+
+    {% empty %}
+
+    <div class="card">
+        <p>No hay canchas disponibles</p>
+    </div>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

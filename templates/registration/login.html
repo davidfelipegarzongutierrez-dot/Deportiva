@@ -1,0 +1,48 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar sesión</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card" style="max-width: 350px; margin: auto; margin-top: 80px;">
+
+        <h1>Iniciar sesión</h1>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {{ form.username.label }}
+            {{ form.username }}
+
+            <br><br>
+
+            {{ form.password.label }}
+            {{ form.password }}
+
+            <br><br>
+
+            <button type="submit">Ingresar</button>
+        </form>
+
+        <hr>
+
+        <p>
+            ¿No tienes cuenta?
+            <a href="{% url 'registro' %}">Regístrate aquí</a>
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

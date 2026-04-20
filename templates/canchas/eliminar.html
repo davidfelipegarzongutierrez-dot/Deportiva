@@ -1,0 +1,44 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Eliminar Cancha</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card" style="max-width: 500px; margin: auto; margin-top: 60px; text-align: center;">
+
+        <h1>Eliminar cancha</h1>
+
+        <p>
+            ¿Estás seguro de eliminar la cancha
+            <strong>{{ cancha.nombre }}</strong>?
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <button type="submit" style="background:#dc2626;">
+                Sí, eliminar
+            </button>
+        </form>
+
+        <br>
+
+        <a class="btn" href="{% url 'lista_canchas' %}">
+            Cancelar
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Cancha</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card" style="max-width: 500px; margin: auto; margin-top: 60px;">
+
+        <h1>Editar cancha</h1>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit">Guardar cambios</button>
+        </form>
+
+        <br>
+
+        <a class="btn" href="{% url 'lista_canchas' %}">
+            Volver
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

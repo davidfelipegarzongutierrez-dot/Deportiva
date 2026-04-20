@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Cancha</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card" style="max-width: 500px; margin: auto; margin-top: 60px;">
+
+        <h1>Crear nueva cancha</h1>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit">Guardar Cancha</button>
+        </form>
+
+        <br>
+
+        <a class="btn" href="{% url 'lista_canchas' %}">
+            Volver
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Reservas</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Mis reservas</h1>
+
+    <div class="card">
+        <a class="btn" href="{% url 'reporte_reservas_pdf' %}">
+            Descargar PDF
+        </a>
+
+        <a class="btn" href="{% url 'reservas_disponibles' %}">
+            Ver disponibles
+        </a>
+    </div>
+
+    {% for reserva in reservas %}
+
+    <div class="card">
+
+        <h3>{{ reserva.cancha }}</h3>
+
+        <p> {{ reserva.fecha }}</p>
+        <p> {{ reserva.hora_inicio }} - {{ reserva.hora_fin }}</p>
+        <p> {{ reserva.jugadores.count }} / {{ reserva.capacidad }}</p>
+
+        {% if user in reserva.jugadores.all %}
+            <p style="color:#22c55e;"><strong>✔ Estás en esta reserva</strong></p>
+        {% endif %}
+
+        <form method="post"
+              action="{% url 'salir_reserva' reserva.id %}"
+              onsubmit="return confirm('¿Seguro que quieres salir?');">
+
+            {% csrf_token %}
+            <button style="background:#dc2626;">
+                Salir
+            </button>
+
+        </form>
+
+    </div>
+
+    {% empty %}
+
+        <div class="card">
+            <p>No tienes reservas</p>
+        </div>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

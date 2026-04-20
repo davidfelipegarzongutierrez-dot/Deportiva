@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card" style="max-width: 420px; margin: auto; margin-top: 60px; text-align: center;">
+
+        <h1>Registro</h1>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div style="text-align: left;">
+                {{ form.as_p }}
+            </div>
+
+            <button type="submit">Registrarse</button>
+        </form>
+
+        <hr>
+
+        <p style="margin-top: 10px;">
+            ¿Ya tienes cuenta?
+            <a href="{% url 'login' %}">Inicia sesión</a>
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

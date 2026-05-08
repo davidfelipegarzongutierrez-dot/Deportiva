@@ -109,6 +109,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # ========================
 AUTH_USER_MODEL = 'usuarios.Usuario'
 
+AUTHENTICATION_BACKENDS = [
+    'usuarios.backends.EmailOrUsernameBackend',
+]
 
 # ========================
 # INTERNACIONALIZACIÓN

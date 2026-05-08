@@ -139,3 +139,9 @@ LOGIN_REDIRECT_URL = '/canchas/home/'
 LOGOUT_REDIRECT_URL = '/'
 
 LOGIN_URL = '/'
+
+# ========================
+# EMAIL
+# ========================
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

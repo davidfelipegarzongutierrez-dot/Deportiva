@@ -7,6 +7,11 @@ User = get_user_model()
 
 class UsuarioCreationForm(UserCreationForm):
 
+    email = forms.EmailField(
+        label="Correo electrónico",
+        required=True
+    )
+
     password1 = forms.CharField(
         label="Contraseña",
         widget=forms.PasswordInput,
@@ -21,8 +26,18 @@ class UsuarioCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2')
 
         help_texts = {
-            'username': ""
+            'username': "",
+            'email': ""
         }
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+
+        if commit:
+            user.save()
+
+        return user

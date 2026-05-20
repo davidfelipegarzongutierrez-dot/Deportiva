@@ -114,3 +114,40 @@ p{
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(239,68,68,0.4);
 }
+
+/* =========================
+   CARDS DE CANCHAS
+========================= */
+
+.cancha-card{
+    overflow: hidden;
+    padding: 0;
+    transition: 0.3s;
+}
+
+.cancha-card:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.cancha-img{
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    display: block;
+    border-bottom: 1px solid #1f2937;
+}
+
+.cancha-info{
+    padding: 20px;
+}
+
+.cancha-info h3{
+    margin-top: 0;
+    font-size: 24px;
+    color: #f9fafb;
+}
+
+.acciones{
+    margin-top: 18px;
+}

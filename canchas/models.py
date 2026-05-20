@@ -9,11 +9,28 @@ DEPORTE_CHOICES = [
 
 class Cancha(models.Model):
     nombre = models.CharField(max_length=100)
-    deporte = models.CharField(max_length=20, choices=DEPORTE_CHOICES)
-    precio_por_hora = models.DecimalField(max_digits=8, decimal_places=2)
+
+    deporte = models.CharField(
+        max_length=20,
+        choices=DEPORTE_CHOICES
+    )
+
+    precio_por_hora = models.DecimalField(
+        max_digits=8,
+        decimal_places=2
+    )
+
     hora_apertura = models.TimeField()
     hora_cierre = models.TimeField()
+
     disponible = models.BooleanField(default=True)
+
+    # 🔥 NUEVA IMAGEN
+    imagen = models.ImageField(
+        upload_to='canchas/',
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return self.nombre

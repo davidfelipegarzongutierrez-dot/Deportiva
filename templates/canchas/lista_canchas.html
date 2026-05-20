@@ -17,7 +17,7 @@
 
     <!-- PDF -->
     <div class="card">
-        <a class="btn" href="{% url 'reporte_canchas_pdf' %}">
+        <a class="btn btn-info" href="{% url 'reporte_canchas_pdf' %}">
             Descargar PDF
         </a>
     </div>
@@ -50,7 +50,9 @@
 
             <br><br>
 
-            <button type="submit">Filtrar</button>
+            <button type="submit" class="btn btn-info">
+                Filtrar
+            </button>
 
         </form>
     </div>
@@ -58,7 +60,7 @@
     <!-- ADMIN -->
     {% if user.is_superuser %}
     <div class="card">
-        <a class="btn" href="{% url 'crear_cancha' %}">
+        <a class="btn btn-success" href="{% url 'crear_cancha' %}">
             Crear cancha
         </a>
     </div>
@@ -74,18 +76,20 @@
         <p>Deporte: {{ cancha.deporte }}</p>
         <p>Precio: ${{ cancha.precio_por_hora }}</p>
 
-        <a class="btn" href="{% url 'crear_reserva_desde_cancha' cancha.id %}">
+        <a class="btn btn-info" href="{% url 'crear_reserva_desde_cancha' cancha.id %}">
             Reservar
         </a>
 
         {% if user.is_superuser %}
-            <a class="btn" href="{% url 'editar_cancha' cancha.id %}">
+
+            <a class="btn btn-warning" href="{% url 'editar_cancha' cancha.id %}">
                 Editar
             </a>
 
-            <a class="btn" style="background:#dc2626;" href="{% url 'eliminar_cancha' cancha.id %}">
+            <a class="btn btn-danger" href="{% url 'eliminar_cancha' cancha.id %}">
                 Eliminar
             </a>
+
         {% endif %}
 
     </div>

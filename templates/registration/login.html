@@ -17,6 +17,14 @@
 
         <h1>Iniciar sesión</h1>
 
+        {% if form.errors %}
+    <div class="error-box">
+        Usuario o contraseña incorrectos.
+    </div>
+
+    <br>
+{% endif %}
+
         <form method="post">
             {% csrf_token %}
 
@@ -30,14 +38,26 @@
 
             <br><br>
 
-            <button type="submit">Ingresar</button>
+            <button type="submit" class="btn btn-info">
+                Ingresar
+            </button>
         </form>
+
+        <br>
+
+        <p>
+            <a href="{% url 'password_reset_demo' %}">
+                ¿Olvidaste tu contraseña?
+            </a>
+        </p>
 
         <hr>
 
         <p>
             ¿No tienes cuenta?
-            <a href="{% url 'registro' %}">Regístrate aquí</a>
+            <a href="{% url 'registro' %}">
+                Regístrate aquí
+            </a>
         </p>
 
     </div>

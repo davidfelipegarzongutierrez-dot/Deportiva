@@ -4,7 +4,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Inicio</title>
+    <title>Dashboard Deportiva</title>
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
@@ -13,53 +13,136 @@
 
 <div class="container">
 
-    <h1>Deportiva Dashboard</h1>
+    <!-- HEADER -->
+    <div class="card dashboard-header">
+        <h1>Deportiva Dashboard</h1>
+
+        <p>
+            Bienvenido,
+            <strong>{{ user.username }}</strong>
+        </p>
+    </div>
 
     {% if user.is_authenticated %}
 
-        <!-- Usuario -->
-        <div class="card">
-            <h3>👤 Usuario</h3>
-            <p><strong>{{ user.username }}</strong></p>
+    <!-- ESTADÍSTICAS -->
+    <div class="stats-grid">
+
+        <div class="card stat-card">
+            <h2>🏟</h2>
+            <h3>{{ total_canchas }}</h3>
+            <p>Canchas registradas</p>
         </div>
 
-        <!-- Menú principal -->
-        <div class="card">
-            <h3>Menú principal</h3>
-
-            <a class="btn" href="/reservas/">Mis reservas</a>
-            <a class="btn" href="/reservas/disponibles/">Reservas disponibles</a>
-            <a class="btn" href="/canchas/">Ver canchas</a>
+        <div class="card stat-card">
+            <h2>📅</h2>
+            <h3>{{ total_reservas }}</h3>
+            <p>Reservas totales</p>
         </div>
 
-        <!-- Admin -->
+        <div class="card stat-card">
+            <h2>🌐</h2>
+            <h3>{{ reservas_disponibles }}</h3>
+            <p>Reservas disponibles</p>
+        </div>
+
         {% if user.is_superuser %}
-        <div class="card">
-            <h3>Panel Administrador</h3>
-
-            <a class="btn" href="{% url 'crear_reserva' %}">Crear reserva</a>
-            <a class="btn" href="#">Administrar reservas</a>
+        <div class="card stat-card">
+            <h2>👥</h2>
+            <h3>{{ total_usuarios }}</h3>
+            <p>Usuarios registrados</p>
         </div>
         {% endif %}
 
-        <!-- Logout -->
-        <div class="card">
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit">Cerrar sesión</button>
-            </form>
+    </div>
+
+    <!-- ACCIONES -->
+    <div class="card">
+
+        <h2>Accesos rápidos</h2>
+
+        <div class="dashboard-buttons">
+
+            <a class="btn btn-info" href="/canchas/">
+                Ver canchas
+            </a>
+
+            <a class="btn btn-success" href="/reservas/">
+                Mis reservas
+            </a>
+
+            <a class="btn btn-warning" href="/reservas/disponibles/">
+                Reservas disponibles
+            </a>
+
         </div>
+
+    </div>
+
+    <!-- ADMIN -->
+    {% if user.is_superuser %}
+
+    <div class="card">
+
+        <h2>Panel administrador</h2>
+
+        <div class="dashboard-buttons">
+
+            <a class="btn btn-success"
+               href="{% url 'crear_cancha' %}">
+                Crear cancha
+            </a>
+
+            <a class="btn btn-info"
+               href="{% url 'crear_reserva' %}">
+                Crear reserva
+            </a>
+
+            <a class="btn btn-warning"
+               href="/admin/">
+                Django Admin
+            </a>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+    <!-- LOGOUT -->
+    <div class="card">
+
+        <h2>Sesión</h2>
+
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+
+            <button class="btn btn-danger" type="submit">
+                Cerrar sesión
+            </button>
+        </form>
+
+    </div>
 
     {% else %}
 
-        <div class="card">
-            <h3>Acceso requerido</h3>
+    <div class="card">
 
-            <p>No has iniciado sesión</p>
+        <h2>Acceso requerido</h2>
 
-            <a class="btn" href="{% url 'login' %}">Iniciar sesión</a>
-            <a class="btn" href="{% url 'registro' %}">Registrarse</a>
-        </div>
+        <p>No has iniciado sesión.</p>
+
+        <a class="btn btn-info"
+           href="{% url 'login' %}">
+            Iniciar sesión
+        </a>
+
+        <a class="btn btn-success"
+           href="{% url 'registro' %}">
+            Registrarse
+        </a>
+
+    </div>
 
     {% endif %}
 

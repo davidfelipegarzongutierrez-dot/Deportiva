@@ -28,11 +28,21 @@ def home(request):
 
     total_usuarios = Usuario.objects.count()
 
+    # 🔥 ÚLTIMAS CANCHAS
+    ultimas_canchas = Cancha.objects.order_by('-id')[:3]
+
+    # 🔥 ÚLTIMAS RESERVAS
+    ultimas_reservas = Reserva.objects.order_by('-id')[:5]
+
     context = {
         'total_canchas': total_canchas,
         'total_reservas': total_reservas,
         'reservas_disponibles': reservas_disponibles,
         'total_usuarios': total_usuarios,
+
+        # 🔥 NUEVOS DATOS
+        'ultimas_canchas': ultimas_canchas,
+        'ultimas_reservas': ultimas_reservas,
     }
 
     return render(request, 'home.html', context)

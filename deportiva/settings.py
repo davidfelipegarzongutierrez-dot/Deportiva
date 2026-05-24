@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-qy84mr=9km-rzwa3d%hc%rtoil=zxrrk&uto8qjix-gn0^_081
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # ========================
@@ -41,6 +41,8 @@ INSTALLED_APPS = [
 # ========================
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -130,6 +132,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 # ========================

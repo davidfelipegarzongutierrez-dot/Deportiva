@@ -1,0 +1,77 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+
+    background: linear-gradient(135deg, #050b18, #0a1a33);
+    color: #dbeafe;
+}
+
+/* contenedor */
+.container {
+    width: 85%;
+    margin: auto;
+    padding: 25px;
+}
+
+/* tarjetas */
+.card {
+    background: #0f2444;
+    padding: 18px;
+    margin: 15px 0;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    border: 1px solid #1e3a8a;
+}
+
+/* botones */
+button, .btn {
+    background: #1e40af;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.2s;
+    font-weight: bold;
+}
+
+button:hover, .btn:hover {
+    background: #2563eb;
+    transform: scale(1.05);
+}
+
+/* títulos */
+h1, h2, h3 {
+    color: #93c5fd;
+}
+
+/* inputs (ANTES MUY BLANCOS) */
+input, select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #1e3a8a;
+    margin-top: 5px;
+
+    background: #0b1b33;
+    color: #e5e7eb;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border: 1px solid #3b82f6;
+    box-shadow: 0 0 8px #1d4ed8;
+}
+
+/* enlaces */
+a {
+    color: #60a5fa;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

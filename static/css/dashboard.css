@@ -160,7 +160,6 @@
     font-size: 18px;
     color: #f8fafc;
 }
-
 .mini-info p{
     margin-top: 8px;
     color: #cbd5e1;
@@ -199,4 +198,23 @@
         text-align: center;
     }
 
+}
+
+/* =========================
+   PERFIL RESUMEN
+========================= */
+
+.perfil-resumen{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.perfil-img{
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+
+    border: 3px solid #3b82f6;
 }

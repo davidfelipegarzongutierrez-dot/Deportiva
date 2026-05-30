@@ -1,0 +1,82 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi perfil</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>Mi perfil</h1>
+
+        {% if user.foto_perfil %}
+            <div style="text-align:center; margin-bottom:20px;">
+
+                <img
+                    src="{{ user.foto_perfil.url }}"
+                    alt="Foto de perfil"
+                    style="
+                        width:160px;
+                        height:160px;
+                        border-radius:50%;
+                        object-fit:cover;
+                        border:3px solid #3b82f6;
+                    "
+                >
+
+            </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <p>
+                <label>Nombre de usuario</label>
+                {{ form.username }}
+            </p>
+
+            <p>
+                <label>Correo electrónico</label>
+                {{ form.email }}
+            </p>
+
+            <p>
+                <label>Teléfono</label>
+                {{ form.telefono }}
+            </p>
+
+            <p>
+                <label>Foto de perfil</label>
+                {{ form.foto_perfil }}
+            </p>
+
+            <p>
+                <label>Biografía</label>
+                {{ form.biografia }}
+            </p>
+
+            <button type="submit" class="btn btn-success">
+                Guardar cambios
+            </button>
+
+            <a href="/canchas/home/" class="btn btn-info">
+                Volver
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -41,3 +41,33 @@ class UsuarioCreationForm(UserCreationForm):
             user.save()
 
         return user
+    
+class PerfilUsuarioForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+
+        fields = [
+            'username',
+            'email',
+            'telefono',
+            'foto_perfil',
+            'biografia',
+        ]
+
+        labels = {
+            'username': 'Nombre de usuario',
+            'email': 'Correo electrónico',
+            'telefono': 'Teléfono',
+            'foto_perfil': 'Foto de perfil',
+            'biografia': 'Biografía',
+        }
+
+        widgets = {
+            'biografia': forms.Textarea(
+                attrs={
+                    'rows': 4,
+                    'placeholder': 'Cuéntanos algo sobre ti...'
+                }
+            )
+        }

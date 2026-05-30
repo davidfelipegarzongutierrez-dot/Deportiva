@@ -1,16 +1,26 @@
 from django.shortcuts import render, redirect
-from .forms import UsuarioCreationForm
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
+
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
+
 from django.urls import reverse
+
+from .forms import (
+    UsuarioCreationForm,
+    PerfilUsuarioForm
+)
 
 User = get_user_model()
 
 
+# =========================================
+# REGISTRO
+# =========================================
 def registro(request):
 
     if request.method == 'POST':
@@ -27,15 +37,21 @@ def registro(request):
             print(form.errors)
 
     else:
+
         form = UsuarioCreationForm()
 
     return render(
         request,
         'registration/registro.html',
-        {'form': form}
+        {
+            'form': form
+        }
     )
 
 
+# =========================================
+# RECUPERAR CONTRASEÑA
+# =========================================
 def password_reset_demo(request):
 
     reset_url = None
@@ -48,13 +64,19 @@ def password_reset_demo(request):
 
             email = form.cleaned_data['email']
 
-            user = User.objects.filter(email=email).first()
+            user = User.objects.filter(
+                email=email
+            ).first()
 
             if user:
 
-                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                uid = urlsafe_base64_encode(
+                    force_bytes(user.pk)
+                )
 
-                token = default_token_generator.make_token(user)
+                token = (
+                    default_token_generator.make_token(user)
+                )
 
                 reset_url = request.build_absolute_uri(
                     reverse(
@@ -67,6 +89,7 @@ def password_reset_demo(request):
                 )
 
     else:
+
         form = PasswordResetForm()
 
     return render(
@@ -75,5 +98,40 @@ def password_reset_demo(request):
         {
             'form': form,
             'reset_url': reset_url
+        }
+    )
+
+
+# =========================================
+# PERFIL USUARIO
+# =========================================
+@login_required
+def perfil(request):
+
+    if request.method == 'POST':
+
+        form = PerfilUsuarioForm(
+            request.POST,
+            request.FILES,
+            instance=request.user
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            return redirect('perfil')
+
+    else:
+
+        form = PerfilUsuarioForm(
+            instance=request.user
+        )
+
+    return render(
+        request,
+        'usuarios/perfil.html',
+        {
+            'form': form
         }
     )

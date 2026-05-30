@@ -18,6 +18,7 @@ body{
 
 h1,h2,h3{
     color: #f3f4f6;
+    margin-top: 0;
 }
 
 p{
@@ -27,6 +28,7 @@ p{
 a{
     text-decoration: none;
 }
+
 
 /* =========================
    BOTONES
@@ -43,6 +45,7 @@ a{
     transition: 0.25s;
     font-weight: bold;
     margin-right: 8px;
+    margin-top: 8px;
 }
 
 .btn:hover{
@@ -65,8 +68,9 @@ a{
     box-shadow: 0 0 12px #3b82f6;
 }
 
+
 /* =========================
-   CARDS
+   CARDS GENERALES
 ========================= */
 
 .card{
@@ -75,14 +79,17 @@ a{
     padding: 20px;
     margin-bottom: 20px;
     border: 1px solid #1f2937;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
+
 
 /* =========================
    INPUTS
 ========================= */
 
 input,
-select{
+select,
+textarea{
     width: 100%;
     padding: 10px;
     border-radius: 8px;
@@ -90,10 +97,12 @@ select{
     background: #1f2937;
     color: white;
     box-sizing: border-box;
+    margin-top: 5px;
 }
 
 input:focus,
-select:focus{
+select:focus,
+textarea:focus{
     outline: none;
     border-color: #3b82f6;
     box-shadow: 0 0 8px #3b82f6;
@@ -104,11 +113,30 @@ input[type="checkbox"]{
 }
 
 
+/* =========================
+   DASHBOARD
+========================= */
+
+.dashboard-header{
+    margin-bottom: 30px;
+}
+
+.dashboard-header h1{
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.dashboard-header p{
+    font-size: 18px;
+    color: #94a3b8;
+}
+
+
 /* GRID ESTADÍSTICAS */
 
 .stats-grid{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: 20px;
     margin-bottom: 30px;
 }
@@ -124,7 +152,7 @@ input[type="checkbox"]{
 
 .stat-card:hover{
     transform: translateY(-5px);
-    box-shadow: 0 0 20px rgba(59,130,246,0.4);
+    box-shadow: 0 0 20px rgba(59,130,246,0.35);
 }
 
 .stat-card h2{
@@ -134,9 +162,10 @@ input[type="checkbox"]{
 }
 
 .stat-card p{
-    margin-top: 10px;
-    font-size: 18px;
+    margin-top: 12px;
+    font-size: 17px;
 }
+
 
 /* BOTONES DASHBOARD */
 
@@ -147,8 +176,9 @@ input[type="checkbox"]{
     margin-top: 20px;
 }
 
+
 /* =========================
-   CANCHAS
+   CARDS DE CANCHAS
 ========================= */
 
 .cancha-card{
@@ -164,9 +194,10 @@ input[type="checkbox"]{
 
 .cancha-img{
     width: 100%;
-    height: 260px;
+    height: 240px;
     object-fit: cover;
     display: block;
+    border-bottom: 1px solid #1f2937;
 }
 
 .cancha-info{
@@ -174,28 +205,78 @@ input[type="checkbox"]{
 }
 
 .cancha-info h3{
-    margin-top: 0;
     font-size: 26px;
+    margin-bottom: 12px;
+}
+
+.cancha-info p{
+    margin-bottom: 10px;
 }
 
 .acciones{
     margin-top: 20px;
 }
 
-/* MINI CARDS HOME */
 
-.cancha-mini-card{
+/* =========================
+   MINI CARDS HOME
+========================= */
+
+.mini-card{
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 18px;
+    background: #0f172a;
+    border-radius: 14px;
+    padding: 15px;
+    margin-top: 15px;
+    border: 1px solid #1e293b;
 }
 
-.cancha-mini-img{
+.mini-card:hover{
+    box-shadow: 0 0 12px rgba(59,130,246,0.2);
+}
+
+.mini-img{
     width: 120px;
     height: 90px;
     object-fit: cover;
     border-radius: 12px;
 }
+
+
+/* =========================
+   FORMULARIOS
+========================= */
+
+form label{
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #e5e7eb;
+}
+
+
+/* =========================
+   TABLAS FUTURAS
+========================= */
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td{
+    padding: 12px;
+    border-bottom: 1px solid #374151;
+}
+
+th{
+    background: #1e293b;
+}
+
 
 /* =========================
    ERRORES
@@ -208,4 +289,48 @@ input[type="checkbox"]{
     padding: 12px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(239,68,68,0.4);
+    margin-bottom: 20px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width: 768px){
+
+    .container{
+        width: 95%;
+    }
+
+    .dashboard-header h1{
+        font-size: 30px;
+    }
+
+    .stat-card h2{
+        font-size: 38px;
+    }
+
+    .cancha-img{
+        height: 200px;
+    }
+
+    .mini-card{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .mini-img{
+        width: 100%;
+        height: 180px;
+    }
+
+    .dashboard-buttons{
+        flex-direction: column;
+    }
+
+    .btn{
+        width: 100%;
+        text-align: center;
+    }
 }

@@ -71,6 +71,10 @@
 
         <h3>Acciones rápidas</h3>
 
+        <a class="btn btn-warning" href="{% url 'perfil' %}">
+            Mi perfil
+        </a>
+
         <div class="dashboard-buttons">
 
             <a class="btn btn-info" href="/reservas/">
@@ -215,6 +219,7 @@
 
         <div class="dashboard-buttons">
 
+
             <a class="btn btn-info" href="{% url 'login' %}">
                 Iniciar sesión
             </a>
@@ -222,7 +227,10 @@
             <a class="btn btn-success" href="{% url 'registro' %}">
                 Registrarse
             </a>
-
+            
+            <a class="btn btn-info" href="{% url 'perfil' %}">
+                Mi perfil
+            </a>
         </div>
 
     </div>

@@ -1,5 +1,10 @@
 from django.urls import path
-from .views import registro, password_reset_demo
+
+from .views import (
+    registro,
+    password_reset_demo,
+    perfil
+)
 
 urlpatterns = [
 
@@ -13,5 +18,11 @@ urlpatterns = [
         'password-reset-demo/',
         password_reset_demo,
         name='password_reset_demo'
+    ),
+
+    path(
+        'perfil/',
+        perfil,
+        name='perfil'
     ),
 ]

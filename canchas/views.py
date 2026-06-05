@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.db import models
 
 from reportlab.pdfgen import canvas
+
+from datetime import date
 
 from .models import Cancha
 from .forms import CanchaForm
@@ -18,21 +19,47 @@ from usuarios.models import Usuario
 @login_required
 def home(request):
 
+    hoy = date.today()
+
     total_canchas = Cancha.objects.count()
 
-    total_reservas = Reserva.objects.count()
+    # Solo reservas vigentes
+    total_reservas = Reserva.objects.filter(
+        fecha__gte=hoy
+    ).count()
 
+    # Solo reservas públicas vigentes
     reservas_disponibles = Reserva.objects.filter(
-        jugadores__lt=models.F('capacidad')
+        tipo='publica',
+        fecha__gte=hoy
     ).count()
 
     total_usuarios = Usuario.objects.count()
 
-    # 🔥 ÚLTIMAS CANCHAS
+    # =========================
+    # ESTADÍSTICAS PERSONALES
+    # =========================
+
+    mis_reservas = Reserva.objects.filter(
+        jugadores=request.user,
+        fecha__gte=hoy
+    ).count()
+
+    historial_reservas = Reserva.objects.filter(
+        jugadores=request.user,
+        fecha__lt=hoy
+    ).count()
+
+    # Últimas canchas
     ultimas_canchas = Cancha.objects.order_by('-id')[:3]
 
-    # 🔥 ÚLTIMAS RESERVAS
-    ultimas_reservas = Reserva.objects.order_by('-id')[:5]
+    # Últimas reservas vigentes
+    ultimas_reservas = Reserva.objects.filter(
+        fecha__gte=hoy
+    ).order_by(
+        'fecha',
+        'hora_inicio'
+    )[:5]
 
     context = {
         'total_canchas': total_canchas,
@@ -40,9 +67,14 @@ def home(request):
         'reservas_disponibles': reservas_disponibles,
         'total_usuarios': total_usuarios,
 
-        # 🔥 NUEVOS DATOS
+        'mis_reservas': mis_reservas,
+        'historial_reservas': historial_reservas,
+
         'ultimas_canchas': ultimas_canchas,
         'ultimas_reservas': ultimas_reservas,
+
+        # ✅ fecha para dashboard
+        'today': date.today().strftime("%d/%m/%Y"),
     }
 
     return render(request, 'home.html', context)
@@ -158,7 +190,6 @@ def eliminar_cancha(request, cancha_id):
 def reporte_canchas_pdf(request):
 
     response = HttpResponse(content_type='application/pdf')
-
     response['Content-Disposition'] = (
         'attachment; filename="reporte_canchas.pdf"'
     )
@@ -169,7 +200,6 @@ def reporte_canchas_pdf(request):
     p.setFont("Helvetica", 14)
     p.drawString(100, 800, "Reporte de Canchas")
 
-    # DATOS
     canchas = Cancha.objects.all()
 
     y = 760
@@ -188,7 +218,7 @@ def reporte_canchas_pdf(request):
 
         y -= 20
 
-        # NUEVA PÁGINA
+        # nueva página si se llena
         if y < 50:
             p.showPage()
             y = 800

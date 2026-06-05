@@ -1,28 +1,24 @@
+{% extends 'base.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
+{% block title %}
+Deportiva Dashboard
+{% endblock %}
 
-    <!-- CSS BASE -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block content %}
 
-    <!-- CSS DASHBOARD -->
-    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-</head>
+{% if user.is_authenticated %}
 
-<body>
+<!-- ========================= -->
+<!-- HEADER (SAAS STYLE) -->
+<!-- ========================= -->
+<div class="dashboard-header">
 
-<div class="container">
+    {% if user.foto_perfil %}
+        <img src="{{ user.foto_perfil.url }}" class="dashboard-avatar">
+    {% endif %}
 
-    {% if user.is_authenticated %}
-
-    <!-- ========================= -->
-    <!-- HEADER -->
-    <!-- ========================= -->
-    <div class="dashboard-header">
+    <div>
 
         <h1>Deportiva Dashboard</h1>
 
@@ -31,66 +27,91 @@
             <strong>{{ user.username }}</strong>
         </p>
 
-    </div>
-
-
-    <!-- ========================= -->
-    <!-- ESTADÍSTICAS -->
-    <!-- ========================= -->
-    <div class="dashboard-grid">
-
-        <div class="stat-card">
-            <h2>{{ total_canchas }}</h2>
-            <span>Canchas registradas</span>
-        </div>
-
-        <div class="stat-card">
-            <h2>{{ total_reservas }}</h2>
-            <span>Reservas totales</span>
-        </div>
-
-        <div class="stat-card">
-            <h2>{{ reservas_disponibles }}</h2>
-            <span>Reservas disponibles</span>
-        </div>
-
         {% if user.is_superuser %}
-        <div class="stat-card">
-            <h2>{{ total_usuarios }}</h2>
-            <span>Usuarios registrados</span>
-        </div>
+            <span class="badge badge-danger">ADMIN</span>
+        {% else %}
+            <span class="badge badge-info">USER</span>
+        {% endif %}
+
+        <p class="date">
+            Hoy: {{ today|default:"Sistema activo" }}
+        </p>
+
+        {% if user.biografia %}
+            <p class="bio">{{ user.biografia }}</p>
         {% endif %}
 
     </div>
 
+</div>
 
-    <!-- ========================= -->
-    <!-- ACCIONES -->
-    <!-- ========================= -->
-    <div class="card dashboard-card">
+<!-- ========================= -->
+<!-- KPI SECTION -->
+<!-- ========================= -->
+<div class="section-title">Estadísticas generales</div>
 
-        <h3>Acciones rápidas</h3>
+<div class="dashboard-grid">
+
+    <div class="stat-card">
+        <h2>{{ total_canchas }}</h2>
+        <span>Canchas</span>
+    </div>
+
+    <div class="stat-card">
+        <h2>{{ total_reservas }}</h2>
+        <span>Reservas activas</span>
+    </div>
+
+    <div class="stat-card">
+        <h2>{{ reservas_disponibles }}</h2>
+        <span>🌐 Disponibles</span>
+    </div>
+
+    {% if user.is_superuser %}
+    <div class="stat-card highlight">
+        <h2>{{ total_usuarios }}</h2>
+        <span>Usuarios</span>
+    </div>
+    {% endif %}
+
+    <div class="stat-card">
+        <h2>{{ mis_reservas }}</h2>
+        <span>Mis reservas</span>
+    </div>
+
+    <div class="stat-card">
+        <h2>{{ historial_reservas }}</h2>
+        <span>Historial</span>
+    </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- ACTIONS -->
+<!-- ========================= -->
+<div class="section-title">Acciones rápidas</div>
+
+<div class="dashboard-card">
+
+    <div class="dashboard-buttons">
 
         <a class="btn btn-warning" href="{% url 'perfil' %}">
             Mi perfil
         </a>
 
-        <div class="dashboard-buttons">
+        <a class="btn btn-info" href="{% url 'lista_reservas' %}">
+            Mis reservas
+        </a>
 
-            <a class="btn btn-info" href="/reservas/">
-                Mis reservas
-            </a>
+        <a class="btn btn-info" href="{% url 'reservas_disponibles' %}">
+            🌐 Disponibles
+        </a>
 
-            <a class="btn btn-info" href="/reservas/disponibles/">
-                Reservas disponibles
-            </a>
+        <a class="btn btn-info" href="{% url 'lista_canchas' %}">
+            Canchas
+        </a>
 
-            <a class="btn btn-info" href="/canchas/">
-                Ver canchas
-            </a>
-
-            {% if user.is_superuser %}
-
+        {% if user.is_superuser %}
             <a class="btn btn-success" href="{% url 'crear_cancha' %}">
                 Crear cancha
             </a>
@@ -98,146 +119,126 @@
             <a class="btn btn-warning" href="{% url 'crear_reserva' %}">
                 Crear reserva
             </a>
-
-            {% endif %}
-
-        </div>
+        {% endif %}
 
     </div>
-
-
-    <!-- ========================= -->
-    <!-- ÚLTIMAS CANCHAS -->
-    <!-- ========================= -->
-    <div class="card dashboard-card">
-
-        <h3>Últimas canchas registradas</h3>
-
-        <div class="mini-grid">
-
-            {% for cancha in ultimas_canchas %}
-
-            <div class="mini-card">
-
-                {% if cancha.imagen %}
-                    <img
-                        src="{{ cancha.imagen.url }}"
-                        class="mini-img"
-                        alt="{{ cancha.nombre }}"
-                    >
-                {% endif %}
-
-                <div class="mini-info">
-
-                    <strong>{{ cancha.nombre }}</strong>
-
-                    <p>{{ cancha.deporte }}</p>
-
-                    <p>${{ cancha.precio_por_hora }}</p>
-
-                </div>
-
-            </div>
-
-            {% empty %}
-
-            <p>No hay canchas registradas.</p>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-
-    <!-- ========================= -->
-    <!-- ÚLTIMAS RESERVAS -->
-    <!-- ========================= -->
-    <div class="card dashboard-card">
-
-        <h3>Últimas reservas</h3>
-
-        <div class="mini-grid">
-
-            {% for reserva in ultimas_reservas %}
-
-            <div class="mini-card">
-
-                <div class="mini-info">
-
-                    <strong>{{ reserva.cancha.nombre }}</strong>
-
-                    <p>Fecha: {{ reserva.fecha }}</p>
-
-                    <p>
-                        {{ reserva.hora_inicio }}
-                        -
-                        {{ reserva.hora_fin }}
-                    </p>
-
-                </div>
-
-            </div>
-
-            {% empty %}
-
-            <p>No hay reservas registradas.</p>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-
-    <!-- ========================= -->
-    <!-- LOGOUT -->
-    <!-- ========================= -->
-    <div class="card dashboard-card logout-card">
-
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-
-            <button type="submit" class="btn btn-danger">
-                Cerrar sesión
-            </button>
-
-        </form>
-
-    </div>
-
-    {% else %}
-
-    <!-- ========================= -->
-    <!-- NO AUTENTICADO -->
-    <!-- ========================= -->
-    <div class="card">
-
-        <h3>Acceso requerido</h3>
-
-        <p>No has iniciado sesión.</p>
-
-        <div class="dashboard-buttons">
-
-
-            <a class="btn btn-info" href="{% url 'login' %}">
-                Iniciar sesión
-            </a>
-
-            <a class="btn btn-success" href="{% url 'registro' %}">
-                Registrarse
-            </a>
-            
-            <a class="btn btn-info" href="{% url 'perfil' %}">
-                Mi perfil
-            </a>
-        </div>
-
-    </div>
-
-    {% endif %}
 
 </div>
 
-</body>
-</html>
+<!-- ========================= -->
+<!-- CANCHAS -->
+<!-- ========================= -->
+<div class="section-title">Últimas canchas</div>
+
+<div class="mini-grid">
+
+    {% for cancha in ultimas_canchas %}
+
+        <div class="mini-card">
+
+            {% if cancha.imagen %}
+                <img src="{{ cancha.imagen.url }}" class="mini-img">
+            {% endif %}
+
+            <div class="mini-info">
+
+                <strong>{{ cancha.nombre }}</strong>
+
+                <p>{{ cancha.deporte }}</p>
+
+                <span class="badge badge-info">
+                    ${{ cancha.precio_por_hora }}
+                </span>
+
+            </div>
+
+        </div>
+
+    {% empty %}
+
+        <p>No hay canchas registradas.</p>
+
+    {% endfor %}
+
+</div>
+
+<!-- ========================= -->
+<!-- RESERVAS -->
+<!-- ========================= -->
+<div class="section-title">Últimas reservas</div>
+
+<div class="mini-grid">
+
+    {% for reserva in ultimas_reservas %}
+
+        <div class="mini-card">
+
+            <div class="mini-info">
+
+                <strong>{{ reserva.cancha.nombre }}</strong>
+
+                <p>{{ reserva.fecha }}</p>
+
+                <p>
+                    {{ reserva.hora_inicio }}
+                    -
+                    {{ reserva.hora_fin }}
+                </p>
+
+                <span class="badge badge-info">
+                    {{ reserva.jugadores.count }}/{{ reserva.capacidad }}
+                </span>
+
+            </div>
+
+        </div>
+
+    {% empty %}
+
+        <p>No hay reservas registradas.</p>
+
+    {% endfor %}
+
+</div>
+
+<!-- ========================= -->
+<!-- LOGOUT -->
+<!-- ========================= -->
+<div class="dashboard-card logout-card">
+
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+
+        <button class="btn btn-danger">
+            Cerrar sesión
+        </button>
+
+    </form>
+
+</div>
+
+{% else %}
+
+<div class="card">
+
+    <h3>Acceso requerido</h3>
+
+    <p>Debes iniciar sesión para continuar</p>
+
+    <div class="dashboard-buttons">
+
+        <a class="btn btn-info" href="{% url 'login' %}">
+            Login
+        </a>
+
+        <a class="btn btn-success" href="{% url 'registro' %}">
+            Registro
+        </a>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

@@ -108,6 +108,8 @@ def password_reset_demo(request):
 @login_required
 def perfil(request):
 
+    print("ENTRE A PERFIL")
+
     if request.method == 'POST':
 
         form = PerfilUsuarioForm(

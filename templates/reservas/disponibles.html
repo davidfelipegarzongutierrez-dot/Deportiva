@@ -1,59 +1,100 @@
+{% extends 'base.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Reservas Disponibles</title>
+{% block title %}
+Reservas Disponibles
+{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
+{% block content %}
 
-<body>
+<h1>🌐 Reservas disponibles</h1>
 
-<div class="container">
+<div class="card">
 
-    <h1>🌐 Reservas disponibles</h1>
-
-    <div class="card">
-        <a class="btn" href="{% url 'lista_reservas' %}">
-            Mis reservas
-        </a>
-    </div>
-
-    {% for reserva in reservas %}
-
-    <div class="card">
-
-        <h3>{{ reserva.cancha.nombre }}</h3>
-
-        <p>{{ reserva.fecha }}</p>
-        <p>{{ reserva.hora_inicio }} - {{ reserva.hora_fin }}</p>
-        <p>{{ reserva.jugadores.count }} / {{ reserva.capacidad }}</p>
-
-        {% if reserva.jugadores.count < reserva.capacidad %}
-
-            <a class="btn" href="{% url 'unirse_reserva' reserva.id %}">
-                Unirse
-            </a>
-
-        {% else %}
-
-            <p style="color:#ef4444;"><strong>Reserva llena</strong></p>
-
-        {% endif %}
-
-    </div>
-
-    {% empty %}
-
-        <div class="card">
-            <p>No hay reservas disponibles</p>
-        </div>
-
-    {% endfor %}
+    <a class="btn" href="{% url 'lista_reservas' %}">
+        Mis reservas
+    </a>
 
 </div>
 
-</body>
-</html>
+{% for reserva in reservas %}
+
+<div class="card">
+
+    <h3>{{ reserva.cancha.nombre }}</h3>
+
+    <p>{{ reserva.fecha }}</p>
+
+    <p>
+        {{ reserva.hora_inicio }}
+        -
+        {{ reserva.hora_fin }}
+    </p>
+
+    <p>
+        {{ reserva.jugadores.count }}
+        /
+        {{ reserva.capacidad }}
+    </p>
+
+    <!-- ========================= -->
+    <!-- ESTADO VISUAL -->
+    <!-- ========================= -->
+
+    {% if reserva.jugadores.count >= reserva.capacidad %}
+
+        <p style="color:#ef4444; font-weight:bold;">
+            RESERVA LLENA
+        </p>
+
+    {% elif user in reserva.jugadores.all %}
+
+        <p style="color:#22c55e; font-weight:bold;">
+            YA ESTÁS DENTRO
+        </p>
+
+        <form method="post"
+              action="{% url 'salir_reserva' reserva.id %}">
+
+            {% csrf_token %}
+
+            <button class="btn btn-warning">
+                Salir de la reserva
+            </button>
+
+        </form>
+
+    {% else %}
+
+        <p style="color:#3b82f6; font-weight:bold;">
+            DISPONIBLE
+        </p>
+
+        <form method="post"
+              action="{% url 'unirse_reserva' reserva.id %}">
+
+            {% csrf_token %}
+
+            <button class="btn btn-success">
+                Unirse
+            </button>
+
+        </form>
+
+    {% endif %}
+
+</div>
+
+{% empty %}
+
+<div class="card">
+
+    <p>
+        No hay reservas disponibles
+    </p>
+
+</div>
+
+{% endfor %}
+
+{% endblock %}

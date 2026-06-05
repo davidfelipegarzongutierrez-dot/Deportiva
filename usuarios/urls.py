@@ -21,7 +21,7 @@ urlpatterns = [
     ),
 
     path(
-        'perfil/',
+        'micuenta/',
         perfil,
         name='perfil'
     ),

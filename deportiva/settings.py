@@ -46,7 +46,12 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+
+    # ⚠️ Middleware personalizado (sigue activo)
+    'usuarios.middleware.RoleSecurityMiddleware',
+
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -115,6 +120,7 @@ AUTHENTICATION_BACKENDS = [
     'usuarios.backends.EmailOrUsernameBackend',
 ]
 
+
 # ========================
 # INTERNACIONALIZACIÓN
 # ========================
@@ -125,7 +131,7 @@ USE_TZ = True
 
 
 # ========================
-# ARCHIVOS ESTÁTICOS (CSS / JS)
+# ARCHIVOS ESTÁTICOS
 # ========================
 STATIC_URL = '/static/'
 
@@ -139,20 +145,19 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # ========================
 # LOGIN / LOGOUT
 # ========================
+LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/canchas/home/'
 LOGOUT_REDIRECT_URL = '/'
 
-LOGIN_URL = '/'
 
 # ========================
 # EMAIL
 # ========================
-
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# ========================
-# MEDIA (IMÁGENES)
-# ========================
 
+# ========================
+# MEDIA
+# ========================
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

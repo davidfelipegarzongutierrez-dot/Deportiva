@@ -4,9 +4,18 @@ from datetime import date
 
 
 class ReservaForm(forms.ModelForm):
+
     class Meta:
         model = Reserva
-        fields = ['cancha', 'fecha', 'hora_inicio', 'hora_fin', 'capacidad', 'tipo']
+        fields = [
+            'cancha',
+            'fecha',
+            'hora_inicio',
+            'hora_fin',
+            'capacidad',
+            'tipo'
+        ]
+
         widgets = {
             'fecha': forms.DateInput(attrs={'type': 'date'}),
             'hora_inicio': forms.TimeInput(attrs={'type': 'time'}),
@@ -14,6 +23,7 @@ class ReservaForm(forms.ModelForm):
         }
 
     def clean(self):
+
         cleaned_data = super().clean()
 
         fecha = cleaned_data.get("fecha")
@@ -21,17 +31,17 @@ class ReservaForm(forms.ModelForm):
         hora_fin = cleaned_data.get("hora_fin")
         cancha = cleaned_data.get("cancha")
 
-        # ❌ No fechas pasadas
+        # ❌ no pasado
         if fecha and fecha < date.today():
             raise forms.ValidationError("No puedes reservar en el pasado")
 
-        # ❌ Hora inválida
-        if hora_inicio and hora_fin:
-            if hora_inicio >= hora_fin:
-                raise forms.ValidationError("La hora de inicio debe ser menor a la hora final")
+        # ❌ horario inválido
+        if hora_inicio and hora_fin and hora_inicio >= hora_fin:
+            raise forms.ValidationError("Horario inválido")
 
-        # ❌ SOLAPAMIENTO (CLAVE)
+        # ❌ solapamiento
         if fecha and hora_inicio and hora_fin and cancha:
+
             reservas_existentes = Reserva.objects.filter(
                 cancha=cancha,
                 fecha=fecha,
@@ -40,6 +50,8 @@ class ReservaForm(forms.ModelForm):
             )
 
             if reservas_existentes.exists():
-                raise forms.ValidationError("Esta cancha ya está reservada en ese horario. Intenta otro intervalo.")
+                raise forms.ValidationError(
+                    "Esta cancha ya está reservada en ese horario"
+                )
 
         return cleaned_data

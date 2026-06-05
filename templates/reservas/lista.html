@@ -1,66 +1,162 @@
+{% extends 'base.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Mis Reservas</title>
+{% block title %}
+Mis Reservas
+{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
+{% block content %}
 
-<body>
+<div class="dashboard-header">
 
-<div class="container">
+    <h1>Mis Reservas</h1>
 
-    <h1>Mis reservas</h1>
+    <p>
+        Consulta tus reservas activas e historial.
+    </p>
 
-    <div class="card">
-        <a class="btn" href="{% url 'reporte_reservas_pdf' %}">
+</div>
+
+<!-- ACCIONES -->
+
+<div class="card dashboard-card">
+
+    <div class="dashboard-buttons">
+
+        <a class="btn btn-info"
+           href="{% url 'reporte_reservas_pdf' %}">
             Descargar PDF
         </a>
 
-        <a class="btn" href="{% url 'reservas_disponibles' %}">
+        <a class="btn btn-success"
+           href="{% url 'reservas_disponibles' %}">
             Ver disponibles
         </a>
+
     </div>
 
-    {% for reserva in reservas %}
+</div>
 
-    <div class="card">
+<!-- RESERVAS ACTIVAS -->
 
-        <h3>{{ reserva.cancha }}</h3>
+<h2>Reservas activas</h2>
 
-        <p> {{ reserva.fecha }}</p>
-        <p> {{ reserva.hora_inicio }} - {{ reserva.hora_fin }}</p>
-        <p> {{ reserva.jugadores.count }} / {{ reserva.capacidad }}</p>
+<div class="mini-grid">
 
-        {% if user in reserva.jugadores.all %}
-            <p style="color:#22c55e;"><strong>✔ Estás en esta reserva</strong></p>
-        {% endif %}
+    {% for reserva in reservas_activas %}
 
-        <form method="post"
-              action="{% url 'salir_reserva' reserva.id %}"
-              onsubmit="return confirm('¿Seguro que quieres salir?');">
+    <div class="mini-card">
 
-            {% csrf_token %}
-            <button style="background:#dc2626;">
-                Salir
-            </button>
+        <div class="mini-info">
 
-        </form>
+            <strong>
+                {{ reserva.cancha.nombre }}
+            </strong>
+
+            <p>
+                Fecha:
+                {{ reserva.fecha }}
+            </p>
+
+            <p>
+                Horario:
+                {{ reserva.hora_inicio }}
+                -
+                {{ reserva.hora_fin }}
+            </p>
+
+            <p>
+                Jugadores:
+                {{ reserva.jugadores.count }}
+                /
+                {{ reserva.capacidad }}
+            </p>
+
+            <p>
+                Tipo:
+                {{ reserva.tipo }}
+            </p>
+
+            {% if user in reserva.jugadores.all %}
+            <p style="color:#22c55e;">
+                Participando
+            </p>
+            {% endif %}
+
+            <form method="post"
+                  action="{% url 'salir_reserva' reserva.id %}"
+                  onsubmit="return confirm('¿Seguro que quieres salir?');">
+
+                {% csrf_token %}
+
+                <button type="submit"
+                        class="btn btn-danger">
+                    Salir
+                </button>
+
+            </form>
+
+        </div>
 
     </div>
 
     {% empty %}
 
-        <div class="card">
-            <p>No tienes reservas</p>
-        </div>
+    <div class="card">
+        <p>No tienes reservas activas.</p>
+    </div>
 
     {% endfor %}
 
 </div>
 
-</body>
-</html>
+<!-- HISTORIAL -->
+
+<h2>Historial de reservas</h2>
+
+<div class="mini-grid">
+
+    {% for reserva in reservas_historial %}
+
+    <div class="mini-card">
+
+        <div class="mini-info">
+
+            <strong>
+                {{ reserva.cancha.nombre }}
+            </strong>
+
+            <p>
+                Fecha:
+                {{ reserva.fecha }}
+            </p>
+
+            <p>
+                Horario:
+                {{ reserva.hora_inicio }}
+                -
+                {{ reserva.hora_fin }}
+            </p>
+
+            <p>
+                Jugadores:
+                {{ reserva.jugadores.count }}
+                /
+                {{ reserva.capacidad }}
+            </p>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <div class="card">
+        <p>No hay historial de reservas.</p>
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

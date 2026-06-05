@@ -1,149 +1,130 @@
+{% extends 'base.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Canchas disponibles</title>
+{% block title %}
+Canchas disponibles
+{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
+{% block content %}
 
-<body>
+<h1>Canchas disponibles</h1>
 
-<div class="container">
+<!-- PDF -->
+<div class="card">
+    <a class="btn btn-info" href="{% url 'reporte_canchas_pdf' %}">
+        Descargar PDF
+    </a>
+</div>
 
-    <h1>Canchas disponibles</h1>
+<!-- FILTROS -->
+<div class="card">
+    <h3>Filtros</h3>
 
-    <!-- PDF -->
-    <div class="card">
-        <a class="btn btn-info" href="{% url 'reporte_canchas_pdf' %}">
-            Descargar PDF
-        </a>
-    </div>
+    <form method="get">
 
-    <!-- FILTROS -->
-    <div class="card">
-        <h3>Filtros</h3>
+        <label>Deporte</label>
 
-        <form method="get">
+        <select name="deporte">
+            <option value="">Todos</option>
+            <option value="futbol">Fútbol</option>
+            <option value="baloncesto">Baloncesto</option>
+            <option value="tenis">Tenis</option>
+        </select>
 
-            <label>Deporte</label>
+        <br><br>
 
-            <select name="deporte">
-                <option value="">Todos</option>
-                <option value="futbol">Fútbol</option>
-                <option value="baloncesto">Baloncesto</option>
-                <option value="tenis">Tenis</option>
-            </select>
+        <label>Precio máximo</label>
+        <input type="number" name="precio_max">
 
-            <br><br>
+        <br><br>
 
-            <label>Precio máximo</label>
+        <label>
+            <input type="checkbox" name="disponible">
+            Solo disponibles
+        </label>
 
-            <input type="number" name="precio_max">
+        <br><br>
 
-            <br><br>
+        <button type="submit" class="btn btn-info">
+            Filtrar
+        </button>
 
-            <label>
-                <input type="checkbox" name="disponible">
-                Solo disponibles
-            </label>
+    </form>
+</div>
 
-            <br><br>
+<!-- ADMIN -->
+{% if user.is_superuser %}
+<div class="card">
+    <a class="btn btn-success" href="{% url 'crear_cancha' %}">
+        Crear cancha
+    </a>
+</div>
+{% endif %}
 
-            <button type="submit" class="btn btn-info">
-                Filtrar
-            </button>
+<!-- LISTA -->
+{% for cancha in canchas %}
 
-        </form>
-    </div>
+<div class="card cancha-card">
 
-    <!-- ADMIN -->
-    {% if user.is_superuser %}
-    <div class="card">
-        <a class="btn btn-success" href="{% url 'crear_cancha' %}">
-            Crear cancha
-        </a>
-    </div>
+    {% if cancha.imagen %}
+        <img class="cancha-img"
+             src="{{ cancha.imagen.url }}"
+             alt="{{ cancha.nombre }}">
+    {% else %}
+        <img class="cancha-img"
+             src="https://via.placeholder.com/600x250?text=GoSport"
+             alt="Sin imagen">
     {% endif %}
 
-    <!-- LISTA -->
-    {% for cancha in canchas %}
+    <div class="cancha-info">
 
-    <div class="card cancha-card">
+        <h3>{{ cancha.nombre }}</h3>
 
-        <!-- IMAGEN -->
-        {% if cancha.imagen %}
-            <img class="cancha-img"
-                 src="{{ cancha.imagen.url }}"
-                 alt="{{ cancha.nombre }}">
+        <p>Deporte: {{ cancha.deporte }}</p>
+
+        <p>Precio: ${{ cancha.precio_por_hora }}</p>
+
+        <p>
+            🕒 {{ cancha.hora_apertura }} - {{ cancha.hora_cierre }}
+        </p>
+
+        {% if cancha.disponible %}
+            <p style="color:#4ade80;">Disponible</p>
         {% else %}
-            <img class="cancha-img"
-                 src="https://via.placeholder.com/600x250?text=GoSport"
-                 alt="Sin imagen">
+            <p style="color:#f87171;">No disponible</p>
         {% endif %}
 
-        <div class="cancha-info">
+        <div class="acciones">
 
-            <h3>{{ cancha.nombre }}</h3>
+            <a class="btn btn-info"
+               href="{% url 'crear_reserva_desde_cancha' cancha.id %}">
+                Reservar
+            </a>
 
-            <p>Deporte: {{ cancha.deporte }}</p>
-
-            <p>Precio: ${{ cancha.precio_por_hora }}</p>
-
-            <p>
-                🕒 {{ cancha.hora_apertura }}
-                -
-                {{ cancha.hora_cierre }}
-            </p>
-
-            {% if cancha.disponible %}
-                <p style="color:#4ade80;">
-                    Disponible
-                </p>
-            {% else %}
-                <p style="color:#f87171;">
-                    No disponible
-                </p>
-            {% endif %}
-
-            <div class="acciones">
-
-                <a class="btn btn-info"
-                   href="{% url 'crear_reserva_desde_cancha' cancha.id %}">
-                    Reservar
+            {% if user.is_superuser %}
+                <a class="btn btn-warning"
+                   href="{% url 'editar_cancha' cancha.id %}">
+                    Editar
                 </a>
 
-                {% if user.is_superuser %}
-
-                    <a class="btn btn-warning"
-                       href="{% url 'editar_cancha' cancha.id %}">
-                        Editar
-                    </a>
-
-                    <a class="btn btn-danger"
-                       href="{% url 'eliminar_cancha' cancha.id %}">
-                        Eliminar
-                    </a>
-
-                {% endif %}
-
-            </div>
+                <a class="btn btn-danger"
+                   href="{% url 'eliminar_cancha' cancha.id %}">
+                    Eliminar
+                </a>
+            {% endif %}
 
         </div>
 
     </div>
 
-    {% empty %}
-
-    <div class="card">
-        <p>No hay canchas disponibles</p>
-    </div>
-
-    {% endfor %}
-
 </div>
 
-</body>
-</html>
+{% empty %}
+
+<div class="card">
+    <p>No hay canchas disponibles</p>
+</div>
+
+{% endfor %}
+
+{% endblock %}

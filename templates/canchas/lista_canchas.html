@@ -7,6 +7,20 @@ Canchas disponibles
 
 {% block content %}
 
+{% if messages %}
+    {% for message in messages %}
+
+        <div class="card">
+
+            <p>
+                {{ message }}
+            </p>
+
+        </div>
+
+    {% endfor %}
+{% endif %}
+
 <h1>Canchas disponibles</h1>
 
 <!-- PDF -->

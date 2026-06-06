@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
+from django.contrib import messages
+
 from reportlab.pdfgen import canvas
 
 from datetime import date
@@ -172,15 +174,42 @@ def eliminar_cancha(request, cancha_id):
     if not request.user.is_superuser:
         return redirect('home')
 
-    cancha = get_object_or_404(Cancha, id=cancha_id)
+    cancha = get_object_or_404(
+        Cancha,
+        id=cancha_id
+    )
 
     if request.method == 'POST':
+
+        tiene_reservas = Reserva.objects.filter(
+            cancha=cancha
+        ).exists()
+
+        if tiene_reservas:
+
+            messages.error(
+                request,
+                "No se puede eliminar la cancha porque tiene reservas asociadas."
+            )
+
+            return redirect('lista_canchas')
+
         cancha.delete()
+
+        messages.success(
+            request,
+            "Cancha eliminada correctamente."
+        )
+
         return redirect('lista_canchas')
 
-    return render(request, 'canchas/eliminar.html', {
-        'cancha': cancha
-    })
+    return render(
+        request,
+        'canchas/eliminar.html',
+        {
+            'cancha': cancha
+        }
+    )
 
 
 # =========================================

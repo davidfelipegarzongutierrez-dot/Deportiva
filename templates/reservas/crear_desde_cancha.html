@@ -17,6 +17,45 @@
 
         <h1>Reservar: {{ cancha.nombre }}</h1>
 
+        <div class="card">
+
+            <h3>{{ cancha.nombre }}</h3>
+
+            <p>
+                Horario:
+                {{ cancha.hora_apertura }}
+                -
+                {{ cancha.hora_cierre }}
+            </p>
+
+            <p>
+                Precio por hora:
+                ${{ cancha.precio_por_hora }}
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <p>
+                <strong>Deporte:</strong>
+                {{ cancha.deporte }}
+            </p>
+
+            <p>
+                <strong>Precio por hora:</strong>
+                ${{ cancha.precio_por_hora }}
+            </p>
+
+            <p>
+                <strong>Horario:</strong>
+                {{ cancha.hora_apertura }}
+                -
+                {{ cancha.hora_cierre }}
+            </p>
+
+        </div>
+
         <!-- ERRORES -->
         {% if form.errors %}
             <div class="card" style="border:1px solid red;">
@@ -45,12 +84,81 @@
             {{ form.capacidad.label }}<br>
             {{ form.capacidad }}<br><br>
 
+            <div class="card">
+
+                <p id="duracion-preview">
+                    Duración: 0 horas
+                </p>
+
+                <p id="costo-preview">
+                    Costo estimado: $0
+                </p>
+
+            </div>
+
             <button type="submit">Crear Reserva</button>
         </form>
 
     </div>
 
 </div>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    const inicio =
+        document.getElementById('id_hora_inicio');
+
+    const fin =
+        document.getElementById('id_hora_fin');
+
+    const duracionPreview =
+        document.getElementById('duracion-preview');
+
+    const costoPreview =
+        document.getElementById('costo-preview');
+
+    const precioHora =
+        parseFloat("{{ cancha.precio_por_hora }}");
+
+    function actualizar() {
+
+        if (!inicio.value || !fin.value) {
+            return;
+        }
+
+        let inicioDate =
+            new Date('2000-01-01 ' + inicio.value);
+
+        let finDate =
+            new Date('2000-01-01 ' + fin.value);
+
+        let horas =
+            (finDate - inicioDate) / 3600000;
+
+        if (horas > 0) {
+
+            duracionPreview.innerText =
+                'Duración: ' + horas + ' horas';
+
+            let costo =
+                horas * precioHora;
+
+            costoPreview.innerText =
+                'Costo estimado: $' +
+                costo.toLocaleString('es-CO');
+
+        }
+
+    }
+
+    inicio.addEventListener('change', actualizar);
+    fin.addEventListener('change', actualizar);
+
+});
+
+</script>
 
 </body>
 </html>

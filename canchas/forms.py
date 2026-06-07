@@ -7,6 +7,24 @@ class CanchaForm(forms.ModelForm):
         fields = '__all__'
 
         widgets = {
-            'hora_apertura': forms.TimeInput(attrs={'type': 'time'}),
-            'hora_cierre': forms.TimeInput(attrs={'type': 'time'}),
+            'precio_por_hora': forms.NumberInput(
+                attrs={
+                    'placeholder': 'Ej: 30000',
+                    'min': '0'
+                }
+            ),
+
+            'hora_apertura': forms.TimeInput(
+                attrs={
+                    'type': 'time',
+                    'step': 1800
+                }
+            ),
+
+            'hora_cierre': forms.TimeInput(
+                attrs={
+                    'type': 'time',
+                    'step': 1800
+                }
+            ),
         }

@@ -11,6 +11,16 @@ Canchas disponibles
     {% for message in messages %}
 
         <div class="card">
+            <p>{{ message }}</p>
+        </div>
+
+    {% endfor %}
+{% endif %}
+
+{% if messages %}
+    {% for message in messages %}
+
+        <div class="card">
 
             <p>
                 {{ message }}

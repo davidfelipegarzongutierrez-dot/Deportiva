@@ -53,7 +53,10 @@ def unirse_reserva(request, reserva_id):
 def salir_reserva(request, reserva_id):
 
     if request.method != 'POST':
-        messages.error(request, "Método no permitido")
+        messages.error(
+            request,
+            "Método no permitido"
+        )
         return redirect('lista_reservas')
 
     reserva = get_object_or_404(
@@ -62,19 +65,39 @@ def salir_reserva(request, reserva_id):
         jugadores=request.user
     )
 
-    # 🔐 el creador no puede abandonar su propia reserva
+    # =========================
+    # ORGANIZADOR
+    # =========================
     if reserva.usuario == request.user:
+
+        # Solo queda él
+        if reserva.jugadores.count() == 1:
+
+            reserva.delete()
+
+            messages.success(
+                request,
+                "La reserva fue cancelada correctamente."
+            )
+
+            return redirect('lista_reservas')
+
+        # Hay más participantes
         messages.error(
             request,
-            "El creador de la reserva no puede abandonarla"
+            "No puedes abandonar una reserva que tiene participantes."
         )
+
         return redirect('lista_reservas')
 
+    # =========================
+    # PARTICIPANTE NORMAL
+    # =========================
     reserva.jugadores.remove(request.user)
 
     messages.success(
         request,
-        "Saliste de la reserva correctamente"
+        "Saliste de la reserva correctamente."
     )
 
     return redirect('lista_reservas')

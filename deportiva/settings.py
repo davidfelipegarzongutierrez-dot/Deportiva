@@ -15,7 +15,13 @@ SECRET_KEY = 'django-insecure-qy84mr=9km-rzwa3d%hc%rtoil=zxrrk&uto8qjix-gn0^_081
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    '*'
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://deportiva-production.up.railway.app',
+]
 
 
 # ========================

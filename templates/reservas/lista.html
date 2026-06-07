@@ -7,6 +7,24 @@ Mis Reservas
 
 {% block content %}
 
+{% if messages %}
+
+    {% for message in messages %}
+
+        <div class="card"
+             style="
+                border-left:5px solid #f59e0b;
+                margin-bottom:15px;
+             ">
+
+            {{ message }}
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
 <div class="dashboard-header">
 
     <h1>Mis Reservas</h1>

@@ -4,6 +4,7 @@ Django settings for deportiva project.
 
 from pathlib import Path
 import os
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -13,7 +14,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ========================
 SECRET_KEY = 'django-insecure-qy84mr=9km-rzwa3d%hc%rtoil=zxrrk&uto8qjix-gn0^_081'
 
-DEBUG = True
+# 🔥 PRODUCCIÓN (Railway)
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '*'
@@ -24,7 +26,6 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
 USE_X_FORWARDED_HOST = True
 
 
@@ -59,7 +60,7 @@ MIDDLEWARE = [
 
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 
-    # ⚠️ Middleware personalizado (sigue activo)
+    # Middleware personalizado
     'usuarios.middleware.RoleSecurityMiddleware',
 
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -96,17 +97,13 @@ WSGI_APPLICATION = 'deportiva.wsgi.application'
 
 
 # ========================
-# BASE DE DATOS
+# BASE DE DATOS (RAILWAY POSTGRES)
 # ========================
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'deportiva',
-        'USER': 'felix',
-        'PASSWORD': 'felix123',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600
+    )
 }
 
 
@@ -171,5 +168,3 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # ========================
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-CSRF_TRUSTED_ORIGINS

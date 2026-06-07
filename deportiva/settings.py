@@ -23,6 +23,10 @@ CSRF_TRUSTED_ORIGINS = [
     'https://deportiva-production.up.railway.app',
 ]
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+USE_X_FORWARDED_HOST = True
+
 
 # ========================
 # APLICACIONES
@@ -167,3 +171,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # ========================
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+CSRF_TRUSTED_ORIGINS

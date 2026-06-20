@@ -3,7 +3,9 @@ from django.urls import path
 from .views import (
     registro,
     password_reset_demo,
-    perfil
+    perfil,
+    lista_usuarios,
+    perfil_publico
 )
 
 urlpatterns = [
@@ -24,5 +26,17 @@ urlpatterns = [
         'micuenta/',
         perfil,
         name='perfil'
+    ),
+
+    path(
+        'buscar/',
+        lista_usuarios,
+        name='lista_usuarios'
+    ),
+
+    path(
+        'perfil/<str:username>/',
+        perfil_publico,
+        name='perfil_publico'
     ),
 ]

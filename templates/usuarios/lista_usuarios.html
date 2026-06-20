@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Buscar Jugadores{% endblock %}
+
+{% block content %}
+
+<h1>Directorio de Jugadores</h1>
+
+<div class="card">
+    <h3>Filtrar Jugadores</h3>
+    <form method="get">
+        <label for="deporte">Deporte favorito</label>
+        <select name="deporte" id="deporte">
+            <option value="">Todos</option>
+            {% for dep_key, dep_val in deportes %}
+                <option value="{{ dep_key }}" {% if dep_key == deporte_seleccionado %}selected{% endif %}>{{ dep_val }}</option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+
+        <label for="ciudad">Ciudad</label>
+        <input type="text" name="ciudad" id="ciudad" value="{{ ciudad_seleccionada|default:'' }}" placeholder="Ej: Bogotá, Medellín...">
+
+        <br><br>
+
+        <button type="submit" class="btn btn-info">Filtrar</button>
+        <a href="{% url 'lista_usuarios' %}" class="btn">Limpiar</a>
+    </form>
+</div>
+
+<div class="mini-grid">
+    {% for jugador in usuarios %}
+        <div class="mini-card">
+            {% if jugador.foto_perfil %}
+                <img src="{{ jugador.foto_perfil.url }}" class="mini-img">
+            {% else %}
+                <div class="mini-img" style="background: #1e293b; display: flex; align-items: center; justify-content: center; height: 190px;">
+                    <span style="font-size: 40px;">👤</span>
+                </div>
+            {% endif %}
+            
+            <div class="mini-info">
+                <strong>{{ jugador.username }}</strong>
+                <p>📍 {{ jugador.ciudad|default:"Ciudad no especificada" }}</p>
+                <p>⚽ {{ jugador.get_deporte_favorito_display|default:"Deporte no especificado" }}</p>
+                <span class="badge badge-info">{{ jugador.get_nivel_display|default:"Nivel no especificado" }}</span>
+                <br><br>
+                <a class="btn btn-success" href="{% url 'perfil_publico' jugador.username %}" style="width: 100%; text-align: center; box-sizing: border-box; display: block;">
+                    Ver Perfil
+                </a>
+            </div>
+        </div>
+    {% empty %}
+        <div class="card" style="grid-column: 1 / -1; text-align: center;">
+            <p>No se encontraron jugadores con los filtros seleccionados.</p>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

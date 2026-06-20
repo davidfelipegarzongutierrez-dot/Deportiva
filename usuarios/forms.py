@@ -49,25 +49,51 @@ class PerfilUsuarioForm(forms.ModelForm):
 
         fields = [
             'username',
-            'email',
             'telefono',
             'foto_perfil',
             'biografia',
+            'deporte_favorito',
+            'nivel',
+            'ciudad',
+            'posicion_juego',
+            'disponibilidad_habitual',
+            'biografia_deportiva',
         ]
 
         labels = {
             'username': 'Nombre de usuario',
-            'email': 'Correo electrónico',
             'telefono': 'Teléfono',
             'foto_perfil': 'Foto de perfil',
-            'biografia': 'Biografía',
+            'biografia': 'Sobre mí',
+            'deporte_favorito': 'Deporte favorito',
+            'nivel': 'Nivel de juego',
+            'ciudad': 'Ciudad',
+            'posicion_juego': 'Posición / Rol habitual',
+            'disponibilidad_habitual': 'Disponibilidad habitual',
+            'biografia_deportiva': 'Biografía deportiva',
         }
 
         widgets = {
             'biografia': forms.Textarea(
                 attrs={
-                    'rows': 4,
+                    'rows': 3,
                     'placeholder': 'Cuéntanos algo sobre ti...'
                 }
-            )
+            ),
+            'biografia_deportiva': forms.Textarea(
+                attrs={
+                    'rows': 3,
+                    'placeholder': 'Cuéntanos tu experiencia, equipos o logros deportivos...'
+                }
+            ),
+            'ciudad': forms.TextInput(
+                attrs={
+                    'placeholder': 'Ej: Bogotá, Medellín...'
+                }
+            ),
+            'posicion_juego': forms.TextInput(
+                attrs={
+                    'placeholder': 'Ej: Delantero, Portero, Defensa, etc.'
+                }
+            ),
         }

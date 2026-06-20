@@ -27,4 +27,24 @@ class CanchaForm(forms.ModelForm):
                     'step': 1800
                 }
             ),
+
+            'direccion': forms.TextInput(
+                attrs={
+                    'placeholder': 'Ej: Calle 45 # 12-34, Ciudad'
+                }
+            ),
+
+            'latitud': forms.NumberInput(
+                attrs={
+                    'placeholder': 'Ej: 4.60971',
+                    'step': 'any'
+                }
+            ),
+
+            'longitud': forms.NumberInput(
+                attrs={
+                    'placeholder': 'Ej: -74.08175',
+                    'step': 'any'
+                }
+            ),
         }

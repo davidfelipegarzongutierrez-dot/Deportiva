@@ -32,6 +32,25 @@ class Cancha(models.Model):
         null=True
     )
 
+    # UBICACIÓN
+    direccion = models.CharField(
+        max_length=255
+    )
+
+    latitud = models.DecimalField(
+        max_digits=9,
+        decimal_places=6,
+        blank=True,
+        null=True
+    )
+
+    longitud = models.DecimalField(
+        max_digits=9,
+        decimal_places=6,
+        blank=True,
+        null=True
+    )
+
     def __str__(self):
         return self.nombre
 

@@ -23,6 +23,9 @@ Reservas Disponibles
 
     <h3>{{ reserva.cancha.nombre }}</h3>
 
+    <!--DIRECCIÓN (NUEVO) -->
+    <p>{{ reserva.cancha.direccion }}</p>
+
     <p>{{ reserva.fecha }}</p>
 
     <p>
@@ -35,6 +38,21 @@ Reservas Disponibles
         {{ reserva.jugadores.count }}
         /
         {{ reserva.capacidad }}
+    </p>
+
+    <!-- ========================= -->
+    <!-- JUGADORES (NUEVO) -->
+    <!-- ========================= -->
+    <p><strong>👥 Jugadores:</strong></p>
+
+    <p>
+        {% for jugador in reserva.jugadores.all %}
+            <a href="{% url 'perfil_publico' jugador.username %}">
+                {{ jugador.username }}
+            </a>{% if not forloop.last %}, {% endif %}
+        {% empty %}
+            <span>No hay jugadores aún</span>
+        {% endfor %}
     </p>
 
     <!-- ========================= -->
@@ -55,13 +73,10 @@ Reservas Disponibles
 
         <form method="post"
               action="{% url 'salir_reserva' reserva.id %}">
-
             {% csrf_token %}
-
             <button class="btn btn-warning">
                 Salir de la reserva
             </button>
-
         </form>
 
     {% else %}
@@ -72,13 +87,10 @@ Reservas Disponibles
 
         <form method="post"
               action="{% url 'unirse_reserva' reserva.id %}">
-
             {% csrf_token %}
-
             <button class="btn btn-success">
                 Unirse
             </button>
-
         </form>
 
     {% endif %}
@@ -88,11 +100,7 @@ Reservas Disponibles
 {% empty %}
 
 <div class="card">
-
-    <p>
-        No hay reservas disponibles
-    </p>
-
+    <p>No hay reservas disponibles</p>
 </div>
 
 {% endfor %}

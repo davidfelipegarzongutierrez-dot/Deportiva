@@ -56,12 +56,21 @@ def home(request):
     ultimas_canchas = Cancha.objects.order_by('-id')[:3]
 
     # Últimas reservas vigentes
-    ultimas_reservas = Reserva.objects.filter(
-        fecha__gte=hoy
-    ).order_by(
-        'fecha',
-        'hora_inicio'
-    )[:5]
+    if request.user.is_superuser:
+        ultimas_reservas = Reserva.objects.filter(
+            fecha__gte=hoy
+        ).order_by(
+            'fecha',
+            'hora_inicio'
+        )[:5]
+    else:
+        ultimas_reservas = Reserva.objects.filter(
+            jugadores=request.user,
+            fecha__gte=hoy
+        ).order_by(
+            'fecha',
+            'hora_inicio'
+        )[:5]
 
     context = {
         'total_canchas': total_canchas,

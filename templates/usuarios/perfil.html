@@ -25,8 +25,8 @@
         </p>
 
         <p>
-            <label>Correo electrónico</label>
-            {{ form.email }}
+            <label>Correo electrónico (no editable)</label>
+            <input type="text" value="{{ user.email }}" disabled style="background: #111827; color: #9ca3af; cursor: not-allowed; border-color: #374151;">
         </p>
 
         <p>
@@ -40,8 +40,38 @@
         </p>
 
         <p>
-            <label>Biografía</label>
+            <label>Sobre mí</label>
             {{ form.biografia }}
+        </p>
+
+        <p>
+            <label>Deporte favorito</label>
+            {{ form.deporte_favorito }}
+        </p>
+
+        <p>
+            <label>Nivel de juego</label>
+            {{ form.nivel }}
+        </p>
+
+        <p>
+            <label>Ciudad</label>
+            {{ form.ciudad }}
+        </p>
+
+        <p>
+            <label>Posición / Rol habitual</label>
+            {{ form.posicion_juego }}
+        </p>
+
+        <p>
+            <label>Disponibilidad habitual</label>
+            {{ form.disponibilidad_habitual }}
+        </p>
+
+        <p>
+            <label>Biografía deportiva</label>
+            {{ form.biografia_deportiva }}
         </p>
 
         <button type="submit" class="btn btn-success">

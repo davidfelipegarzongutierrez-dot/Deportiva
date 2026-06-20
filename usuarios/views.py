@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from datetime import date
+from django.shortcuts import render, redirect, get_object_or_404
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordResetForm
@@ -14,6 +15,8 @@ from .forms import (
     UsuarioCreationForm,
     PerfilUsuarioForm
 )
+from canchas.models import DEPORTE_CHOICES
+from reservas.models import Reserva
 
 User = get_user_model()
 
@@ -135,5 +138,64 @@ def perfil(request):
         'usuarios/perfil.html',
         {
             'form': form
+        }
+    )
+
+
+# =========================================
+# BUSCADOR / DIRECTORIO DE JUGADORES
+# =========================================
+@login_required
+def lista_usuarios(request):
+
+    deporte = request.GET.get('deporte')
+    ciudad = request.GET.get('ciudad')
+
+    usuarios = User.objects.exclude(id=request.user.id)
+
+    if deporte:
+        usuarios = usuarios.filter(deporte_favorito=deporte)
+
+    if ciudad:
+        usuarios = usuarios.filter(ciudad__icontains=ciudad)
+
+    return render(
+        request,
+        'usuarios/lista_usuarios.html',
+        {
+            'usuarios': usuarios,
+            'deportes': DEPORTE_CHOICES,
+            'deporte_seleccionado': deporte,
+            'ciudad_seleccionada': ciudad
+        }
+    )
+
+
+# =========================================
+# PERFIL PÚBLICO DE OTRO USUARIO
+# =========================================
+@login_required
+def perfil_publico(request, username):
+
+    if username == request.user.username:
+        return redirect('perfil')
+
+    target_user = get_object_or_404(User, username=username)
+
+    hoy = date.today()
+
+    # Mostrar únicamente reservas públicas y futuras del usuario organizador
+    reservas_organizadas = Reserva.objects.filter(
+        usuario=target_user,
+        tipo='publica',
+        fecha__gte=hoy
+    ).order_by('fecha', 'hora_inicio')
+
+    return render(
+        request,
+        'usuarios/perfil_publico.html',
+        {
+            'target_user': target_user,
+            'reservas': reservas_organizadas
         }
     )

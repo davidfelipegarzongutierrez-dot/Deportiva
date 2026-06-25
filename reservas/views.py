@@ -3,6 +3,7 @@ from datetime import date
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from openpyxl import Workbook
 from django.http import HttpResponse
 
 from reportlab.pdfgen import canvas
@@ -10,6 +11,7 @@ from reportlab.pdfgen import canvas
 from .models import Reserva
 from .forms import ReservaForm
 from canchas.models import Cancha
+
 
 
 # =========================================
@@ -111,29 +113,48 @@ def lista_reservas(request):
 
     hoy = date.today()
 
-    base_query = Reserva.objects.filter(cancha__isnull=False)
+    base_query = Reserva.objects.filter(
+        cancha__isnull=False
+    )
 
     if request.user.is_superuser:
 
         reservas_activas = base_query.filter(
             fecha__gte=hoy
-        ).order_by('fecha', 'hora_inicio')
+        ).order_by(
+            'fecha',
+            'hora_inicio'
+        )
 
         reservas_historial = base_query.filter(
             fecha__lt=hoy
-        ).order_by('-fecha', '-hora_inicio')
+        ).order_by(
+            '-fecha',
+            '-hora_inicio'
+        )
 
     else:
 
         reservas_activas = base_query.filter(
             jugadores=request.user,
             fecha__gte=hoy
-        ).order_by('fecha', 'hora_inicio')
+        ).order_by(
+            'fecha',
+            'hora_inicio'
+        )
 
         reservas_historial = base_query.filter(
             jugadores=request.user,
             fecha__lt=hoy
-        ).order_by('-fecha', '-hora_inicio')
+        ).order_by(
+            '-fecha',
+            '-hora_inicio'
+        )
+
+    # =========================================
+    # CÁLCULO DE COSTOS
+    # =========================================
+
 
     return render(
         request,
@@ -164,11 +185,16 @@ def reservas_disponibles(request):
         'hora_inicio'
     )
 
+    reservas_amigos = reservas.filter(
+        usuario__in=request.user.amigos.all()
+    )
+
     return render(
         request,
         'reservas/disponibles.html',
         {
-            'reservas': reservas
+            'reservas': reservas,
+            'reservas_amigos': reservas_amigos
         }
     )
 
@@ -279,37 +305,189 @@ def reporte_reservas_pdf(request):
 
     reservas = Reserva.objects.filter(
         jugadores=request.user
-    )
+    ).order_by('fecha', 'hora_inicio')
 
-    p.setFont("Helvetica-Bold", 16)
-    p.drawString(100, 800, "REPORTE DE MIS RESERVAS")
+    # -------------------------
+    # Encabezado
+    # -------------------------
 
-    y = 760
-    p.setFont("Helvetica", 10)
+    p.setFont("Helvetica-Bold", 18)
+    p.drawString(50, 810, "REPORTE DE RESERVAS")
+
+    p.setFont("Helvetica", 11)
+    p.drawString(50, 790, f"Usuario: {request.user.username}")
+    p.drawString(50, 775, f"Total de reservas: {reservas.count()}")
+
+    y = 740
 
     for reserva in reservas:
 
-        texto = (
-            f"{reserva.cancha.nombre} | "
-            f"{reserva.fecha} | "
-            f"{reserva.hora_inicio} - "
-            f"{reserva.hora_fin}"
+        p.setFont("Helvetica-Bold", 11)
+        p.drawString(
+            50,
+            y,
+            reserva.cancha.nombre
         )
 
-        p.drawString(50, y, texto)
+        y -= 15
 
-        y -= 20
+        p.setFont("Helvetica", 10)
 
-        if y < 50:
+        p.drawString(
+            60,
+            y,
+            f"Fecha: {reserva.fecha}"
+        )
+
+        y -= 15
+
+        p.drawString(
+            60,
+            y,
+            f"Horario: {reserva.hora_inicio} - {reserva.hora_fin}"
+        )
+
+        y -= 15
+
+        p.drawString(
+            60,
+            y,
+            f"Jugadores: {reserva.jugadores.count()} / {reserva.capacidad}"
+        )
+
+        y -= 15
+
+        p.drawString(
+            60,
+            y,
+            f"Costo: ${reserva.costo_total:,.0f}"
+        )
+
+        y -= 15
+
+        p.drawString(
+            60,
+            y,
+            f"Aporte por jugador: ${reserva.aporte_por_jugador:,.0f}"
+        )
+
+        y -= 25
+
+        if y < 70:
             p.showPage()
             y = 800
 
-    p.drawString(
-        50,
-        y - 30,
-        f"Total reservas: {reservas.count()}"
+    p.save()
+
+    return response
+
+
+# =========================================
+# REPORTE EXCEL
+# =========================================
+@login_required
+def reporte_reservas_excel(request):
+
+    wb = Workbook()
+
+    ws = wb.active
+    ws.title = "Reservas"
+
+    ws.append([
+        "Cancha",
+        "Fecha",
+        "Hora inicio",
+        "Hora fin",
+        "Jugadores",
+        "Costo",
+        "Aporte por jugador"
+    ])
+
+    reservas = Reserva.objects.filter(
+        jugadores=request.user
+    ).order_by(
+        'fecha',
+        'hora_inicio'
     )
 
-    p.save()
+    for reserva in reservas:
+
+        ws.append([
+            reserva.cancha.nombre,
+            str(reserva.fecha),
+            str(reserva.hora_inicio),
+            str(reserva.hora_fin),
+            reserva.jugadores.count(),
+            float(reserva.costo_total),
+            float(reserva.aporte_por_jugador),
+        ])
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+    response["Content-Disposition"] = (
+        'attachment; filename="mis_reservas.xlsx"'
+    )
+
+    wb.save(response)
+
+    return response
+
+
+# =========================================
+# REPORTE TXT
+# =========================================
+@login_required
+def reporte_reservas_txt(request):
+
+    response = HttpResponse(
+        content_type="text/plain"
+    )
+
+    response["Content-Disposition"] = (
+        'attachment; filename="mis_reservas.txt"'
+    )
+
+    reservas = Reserva.objects.filter(
+        jugadores=request.user
+    ).order_by(
+        'fecha',
+        'hora_inicio'
+    )
+
+    response.write("========== REPORTE DE RESERVAS ==========\n\n")
+    response.write(f"Usuario: {request.user.username}\n")
+    response.write(f"Total reservas: {reservas.count()}\n\n")
+
+    for reserva in reservas:
+
+        response.write(
+            f"Cancha: {reserva.cancha.nombre}\n"
+        )
+
+        response.write(
+            f"Fecha: {reserva.fecha}\n"
+        )
+
+        response.write(
+            f"Horario: {reserva.hora_inicio} - {reserva.hora_fin}\n"
+        )
+
+        response.write(
+            f"Jugadores: {reserva.jugadores.count()} / {reserva.capacidad}\n"
+        )
+
+        response.write(
+            f"Costo: ${reserva.costo_total:,.0f}\n"
+        )
+
+        response.write(
+            f"Aporte por jugador: ${reserva.aporte_por_jugador:,.0f}\n"
+        )
+
+        response.write(
+            "-" * 50 + "\n"
+        )
 
     return response

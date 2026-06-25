@@ -8,7 +8,7 @@
 
     <title>
         {% block title %}
-        GoSport
+        Deportiva
         {% endblock %}
     </title>
 
@@ -26,25 +26,43 @@
 
     <div class="navbar-links">
 
+        <a href="{% url 'lista_usuarios' %}">
+            Buscar Jugadores
+        </a>
+
+        {% if user.is_superuser %}
+
+        <a href="{% url 'admin_usuarios' %}">
+            Administrar Usuarios
+        </a>
+
+        {% endif %}
+
         <a href="{% url 'home' %}">
-            🏠 Home
+            Home
         </a>
 
         <a href="{% url 'lista_canchas' %}">
-            ⚽ Canchas
+            Canchas
         </a>
 
         <a href="{% url 'lista_reservas' %}">
-            📅 Reservas
+            Reservas
         </a>
 
         <a href="{% url 'reservas_disponibles' %}">
-            🌐 Disponibles
+            Disponibles
+        </a>
+
+        <a href="{% url 'solicitudes_amistad' %}">
+            Solicitudes de amistad
         </a>
 
         <a href="{% url 'perfil' %}">
-            👤 Perfil
+            Perfil
         </a>
+
+        
 
     </div>
 

@@ -15,11 +15,7 @@
             </div>
         {% endif %}
 
-        <div>
-            <h1 style="margin: 0;">{{ target_user.username }}</h1>
-            <span class="badge badge-info">{{ target_user.get_nivel_display|default:"Nivel no especificado" }}</span>
-            <p style="margin-top: 8px; color: #94a3b8;">{{ target_user.ciudad|default:"Ciudad no especificada" }}</p>
-        </div>
+<!--por si acaso, aqui es lo que eliminaste-->
     </div>
 </div>
 
@@ -46,8 +42,8 @@
         <div class="mini-card">
             <div class="mini-info">
                 <strong>{{ reserva.cancha.nombre }}</strong>
-                <p>📅 {{ reserva.fecha }}</p>
-                <p>🕒 {{ reserva.hora_inicio }} - {{ reserva.hora_fin }}</p>
+                <p>{{ reserva.fecha }}</p>
+                <p>{{ reserva.hora_inicio }} - {{ reserva.hora_fin }}</p>
                 <span class="badge badge-info">{{ reserva.jugadores.count }}/{{ reserva.capacidad }} jugadores</span>
                 <br><br>
                 <a class="btn btn-info" href="{% url 'crear_reserva_desde_cancha' reserva.cancha.id %}" style="display: block; text-align: center;">

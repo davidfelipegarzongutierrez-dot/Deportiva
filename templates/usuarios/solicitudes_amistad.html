@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Solicitudes de amistad
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+
+    <h2>Mis amigos</h2>
+
+    {% if amigos %}
+
+        <div class="mini-grid">
+
+            {% for amigo in amigos %}
+
+                <div class="mini-card">
+
+                    <div class="mini-info">
+
+                        <h3>{{ amigo.username }}</h3>
+
+                        <p>
+                            {{ amigo.ciudad|default:"Ciudad no especificada" }}
+                        </p>
+
+                        <p>
+                            {{ amigo.get_deporte_favorito_display|default:"Sin deporte favorito" }}
+                        </p>
+
+                        <a
+                            href="{% url 'perfil_publico' amigo.username %}"
+                            class="btn btn-info"
+                        >
+                            Ver perfil
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <p>
+            Aún no tienes amigos agregados.
+        </p>
+
+    {% endif %}
+
+</div>
+
+<h1>Solicitudes de amistad</h1>
+
+<div class="mini-grid">
+
+{% for solicitud in solicitudes %}
+
+<div class="mini-card">
+
+    <div class="mini-info">
+
+        <h3>{{ solicitud.remitente.username }}</h3>
+
+        <p>
+            {{ solicitud.remitente.ciudad|default:"Ciudad no especificada" }}
+        </p>
+
+        <p>
+            {{ solicitud.remitente.get_deporte_favorito_display|default:"Sin deporte favorito" }}
+        </p>
+
+        <div style="margin-top:15px;">
+
+            <a
+                href="{% url 'aceptar_solicitud' solicitud.id %}"
+                class="btn btn-success"
+            >
+                Aceptar
+            </a>
+
+            <a
+                href="{% url 'rechazar_solicitud' solicitud.id %}"
+                class="btn btn-danger"
+            >
+                Rechazar
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% empty %}
+
+<div class="card">
+    <p>No tienes solicitudes pendientes.</p>
+</div>
+
+{% endfor %}
+
+</div>
+
+
+
+<a
+    href="{% url 'perfil' %}"
+    class="btn btn-info"
+    style="margin-top:20px;"
+>
+    Volver al perfil
+</a>
+
+{% endblock %}

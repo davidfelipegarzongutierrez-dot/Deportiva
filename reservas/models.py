@@ -1,8 +1,7 @@
 from django.db import models
+from decimal import Decimal
 from usuarios.models import Usuario
 from canchas.models import Cancha
-
-
 class Reserva(models.Model):
 
     usuario = models.ForeignKey(
@@ -42,6 +41,37 @@ class Reserva(models.Model):
 
     def __str__(self):
         return f"{self.usuario} - {self.cancha} - {self.fecha}"
+    
+
+    @property
+    def costo_total(self):
+
+        from datetime import datetime
+
+        inicio = datetime.combine(
+            self.fecha,
+            self.hora_inicio
+        )
+
+        fin = datetime.combine(
+            self.fecha,
+            self.hora_fin
+        )
+
+        horas = (fin - inicio).total_seconds() / 3600
+
+        return Decimal(str(horas)) * self.cancha.precio_por_hora
+
+
+    @property
+    def aporte_por_jugador(self):
+
+        jugadores = self.jugadores.count()
+
+        if jugadores == 0:
+            return self.costo_total
+
+        return self.costo_total / Decimal(jugadores)
 
     class Meta:
         db_table = 'reserva'

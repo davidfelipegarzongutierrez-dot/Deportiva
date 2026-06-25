@@ -43,7 +43,7 @@
             
             <div class="mini-info">
                 <strong>{{ jugador.username }}</strong>
-                <p>📍 {{ jugador.ciudad|default:"Ciudad no especificada" }}</p>
+                <p>{{ jugador.ciudad|default:"Ciudad no especificada" }}</p>
                 <p>⚽ {{ jugador.get_deporte_favorito_display|default:"Deporte no especificado" }}</p>
                 <span class="badge badge-info">{{ jugador.get_nivel_display|default:"Nivel no especificado" }}</span>
                 <br><br>

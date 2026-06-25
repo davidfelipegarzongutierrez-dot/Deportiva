@@ -97,3 +97,28 @@ class PerfilUsuarioForm(forms.ModelForm):
                 }
             ),
         }
+
+class UsuarioAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+
+        fields = [
+            'username',
+            'email',
+            'telefono',
+            'ciudad',
+            'deporte_favorito',
+            'nivel',
+            'is_superuser'
+        ]
+
+        labels = {
+            'username': 'Usuario',
+            'email': 'Correo',
+            'telefono': 'Teléfono',
+            'ciudad': 'Ciudad',
+            'deporte_favorito': 'Deporte',
+            'nivel': 'Nivel',
+            'is_staff': 'Administrador'
+        }

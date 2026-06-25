@@ -76,8 +76,54 @@ class Usuario(AbstractUser):
         null=True
     )
 
+    amigos = models.ManyToManyField(
+    'self',
+    blank=True,
+    symmetrical=True
+    )
+
+
+
     def __str__(self):
         return self.username
 
     class Meta:
         db_table = 'usuario'
+
+
+class SolicitudAmistad(models.Model):
+
+    remitente = models.ForeignKey(
+        Usuario,
+        on_delete=models.CASCADE,
+        related_name='solicitudes_enviadas'
+    )
+
+    destinatario = models.ForeignKey(
+        Usuario,
+        on_delete=models.CASCADE,
+        related_name='solicitudes_recibidas'
+    )
+
+    fecha = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return (
+            f"{self.remitente} -> "
+            f"{self.destinatario}"
+        )
+
+    class Meta:
+        db_table = 'solicitud_amistad'
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    'remitente',
+                    'destinatario'
+                ],
+                name='solicitud_unica'
+            )
+        ]

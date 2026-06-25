@@ -8,181 +8,121 @@ Mis Reservas
 {% block content %}
 
 {% if messages %}
-
     {% for message in messages %}
-
-        <div class="card"
-             style="
-                border-left:5px solid #f59e0b;
-                margin-bottom:15px;
-             ">
-
+        <div class="card" style="border-left:5px solid #f59e0b; margin-bottom:15px;">
             {{ message }}
-
         </div>
-
     {% endfor %}
-
 {% endif %}
 
 <div class="dashboard-header">
-
     <h1>Mis Reservas</h1>
-
-    <p>
-        Consulta tus reservas activas e historial.
-    </p>
-
+    <p>Consulta tus reservas activas e historial.</p>
 </div>
 
-<!-- ACCIONES -->
+<div style="margin-bottom:20px; display:flex; gap:10px; flex-wrap:wrap;">
 
-<div class="card dashboard-card">
+    <a href="{% url 'reporte_reservas_pdf' %}"
+       class="btn btn-danger">
+        Descargar PDF
+    </a>
 
-    <div class="dashboard-buttons">
+    <a href="{% url 'reporte_reservas_excel' %}"
+       class="btn btn-success">
+        Descargar Excel
+    </a>
 
-        <a class="btn btn-info"
-           href="{% url 'reporte_reservas_pdf' %}">
-            Descargar PDF
-        </a>
-
-        <a class="btn btn-success"
-           href="{% url 'reservas_disponibles' %}">
-            Ver disponibles
-        </a>
-
-    </div>
+    <a href="{% url 'reporte_reservas_txt' %}"
+       class="btn btn-info">
+        Descargar TXT
+    </a>
 
 </div>
-
-<!-- RESERVAS ACTIVAS -->
 
 <h2>Reservas activas</h2>
 
 <div class="mini-grid">
 
     {% for reserva in reservas_activas %}
-
     <div class="mini-card">
-
         <div class="mini-info">
+            <strong>{{ reserva.cancha.nombre }}</strong>
 
-            <strong>
-                {{ reserva.cancha.nombre }}
-            </strong>
+            <p>{{ reserva.cancha.direccion }}</p>
 
-            <!--DIRECCIÓN (NUEVO) -->
+            <p>Fecha: {{ reserva.fecha }}</p>
+
+            <p>Horario: {{ reserva.hora_inicio }} - {{ reserva.hora_fin }}</p>
+
+            <p>Jugadores: {{ reserva.jugadores.count }} / {{ reserva.capacidad }}</p>
+
             <p>
-                {{ reserva.cancha.direccion }}
+                Costo total:
+                ${{ reserva.costo_total|floatformat:0 }}
             </p>
 
             <p>
-                Fecha:
-                {{ reserva.fecha }}
+                Aporte estimado:
+                ${{ reserva.aporte_por_jugador|floatformat:0 }}
             </p>
 
-            <p>
-                Horario:
-                {{ reserva.hora_inicio }}
-                -
-                {{ reserva.hora_fin }}
-            </p>
-
-            <p>
-                Jugadores:
-                {{ reserva.jugadores.count }}
-                /
-                {{ reserva.capacidad }}
-            </p>
-
-            <p>
-                Tipo:
-                {{ reserva.tipo }}
-            </p>
+            <p>Tipo: {{ reserva.tipo }}</p>
 
             {% if user in reserva.jugadores.all %}
-            <p style="color:#22c55e;">
-                Participando
-            </p>
+                <p style="color:#22c55e; font-weight: bold; margin-bottom: 12px;">
+                    Participando
+                </p>
             {% endif %}
 
             <form method="post"
                   action="{% url 'salir_reserva' reserva.id %}"
                   onsubmit="return confirm('¿Seguro que quieres salir?');">
-
                 {% csrf_token %}
-
-                <button type="submit"
-                        class="btn btn-danger">
+                <button type="submit" class="btn btn-danger" style="width: 100%;">
                     Salir
                 </button>
-
             </form>
-
         </div>
-
     </div>
-
     {% empty %}
-
-    <div class="card">
+    <div class="card" style="grid-column: span 3;">
         <p>No tienes reservas activas.</p>
     </div>
-
     {% endfor %}
 
 </div>
-
-<!-- HISTORIAL -->
 
 <h2>Historial de reservas</h2>
 
 <div class="mini-grid">
 
     {% for reserva in reservas_historial %}
-
     <div class="mini-card">
-
         <div class="mini-info">
+            <strong>{{ reserva.cancha.nombre }}</strong>
 
-            <strong>
-                {{ reserva.cancha.nombre }}
-            </strong>
+            <p>{{ reserva.cancha.direccion }}</p>
 
-            <!--DIRECCIÓN (NUEVO) -->
+            <p>Fecha: {{ reserva.fecha }}</p>
+
+            <p>Horario: {{ reserva.hora_inicio }} - {{ reserva.hora_fin }}</p>
+
+            <p>Jugadores: {{ reserva.jugadores.count }} / {{ reserva.capacidad }}</p>
             <p>
-                {{ reserva.cancha.direccion }}
+                Costo total:
+                ${{ reserva.costo_total|floatformat:0 }}
             </p>
 
             <p>
-                Fecha:
-                {{ reserva.fecha }}
+                Aporte estimado:
+                ${{ reserva.aporte_por_jugador|floatformat:0 }}
             </p>
-
-            <p>
-                Horario:
-                {{ reserva.hora_inicio }}
-                -
-                {{ reserva.hora_fin }}
-            </p>
-
-            <p>
-                Jugadores:
-                {{ reserva.jugadores.count }}
-                /
-                {{ reserva.capacidad }}
-            </p>
-
         </div>
-
     </div>
-
     {% empty %}
-
-    <div class="card">
+    <div class="card" style="grid-column: span 3;">
         <p>No hay historial de reservas.</p>
     </div>
-
     {% endfor %}
 
 </div>

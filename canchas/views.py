@@ -234,30 +234,66 @@ def reporte_canchas_pdf(request):
 
     p = canvas.Canvas(response)
 
-    # TÍTULO
-    p.setFont("Helvetica", 14)
-    p.drawString(100, 800, "Reporte de Canchas")
-
     canchas = Cancha.objects.all()
 
-    y = 760
+    p.setFont("Helvetica-Bold", 18)
+    p.drawString(50, 810, "REPORTE DE CANCHAS")
 
-    p.setFont("Helvetica", 10)
+    p.setFont("Helvetica", 11)
+    p.drawString(
+        50,
+        790,
+        f"Total de canchas: {canchas.count()}"
+    )
+
+    y = 750
 
     for cancha in canchas:
 
-        texto = (
-            f"{cancha.nombre} - "
-            f"{cancha.deporte} - "
-            f"${cancha.precio_por_hora}"
+        p.setFont("Helvetica-Bold", 11)
+        p.drawString(
+            50,
+            y,
+            cancha.nombre
         )
 
-        p.drawString(50, y, texto)
+        y -= 15
 
-        y -= 20
+        p.setFont("Helvetica", 10)
 
-        # nueva página si se llena
-        if y < 50:
+        p.drawString(
+            60,
+            y,
+            f"Dirección: {cancha.direccion}"
+        )
+
+        y -= 15
+
+        p.drawString(
+            60,
+            y,
+            f"Deporte: {cancha.get_deporte_display()}"
+        )
+
+        y -= 15
+
+        p.drawString(
+            60,
+            y,
+            f"Horario: {cancha.hora_apertura} - {cancha.hora_cierre}"
+        )
+
+        y -= 15
+
+        p.drawString(
+            60,
+            y,
+            f"Precio: ${cancha.precio_por_hora:,.0f}"
+        )
+
+        y -= 25
+
+        if y < 70:
             p.showPage()
             y = 800
 

@@ -9,9 +9,6 @@ Deportiva Dashboard
 
 {% if user.is_authenticated %}
 
-<!-- ========================= -->
-<!-- HEADER (SAAS STYLE) -->
-<!-- ========================= -->
 <div class="dashboard-header">
 
     {% if user.foto_perfil %}
@@ -19,9 +16,7 @@ Deportiva Dashboard
     {% endif %}
 
     <div>
-
         <h1>Deportiva Dashboard</h1>
-
         <p>
             Bienvenido,
             <strong>{{ user.username }}</strong>
@@ -40,14 +35,10 @@ Deportiva Dashboard
         {% if user.biografia %}
             <p class="bio">{{ user.biografia }}</p>
         {% endif %}
-
     </div>
 
 </div>
 
-<!-- ========================= -->
-<!-- KPI SECTION -->
-<!-- ========================= -->
 <div class="section-title">Estadísticas generales</div>
 
 <div class="dashboard-grid">
@@ -64,7 +55,7 @@ Deportiva Dashboard
 
     <div class="stat-card">
         <h2>{{ reservas_disponibles }}</h2>
-        <span>🌐 Disponibles</span>
+        <span>Disponibles</span>
     </div>
 
     {% if user.is_superuser %}
@@ -86,15 +77,10 @@ Deportiva Dashboard
 
 </div>
 
-<!-- ========================= -->
-<!-- ACTIONS -->
-<!-- ========================= -->
 <div class="section-title">Acciones rápidas</div>
 
 <div class="dashboard-card">
-
     <div class="dashboard-buttons">
-
         <a class="btn btn-warning" href="{% url 'perfil' %}">
             Mi perfil
         </a>
@@ -104,7 +90,7 @@ Deportiva Dashboard
         </a>
 
         <a class="btn btn-info" href="{% url 'reservas_disponibles' %}">
-            🌐 Disponibles
+            Disponibles
         </a>
 
         <a class="btn btn-info" href="{% url 'lista_canchas' %}">
@@ -120,125 +106,82 @@ Deportiva Dashboard
                 Crear reserva
             </a>
         {% endif %}
-
     </div>
-
 </div>
 
-<!-- ========================= -->
-<!-- CANCHAS -->
-<!-- ========================= -->
 <div class="section-title">Últimas canchas</div>
 
 <div class="mini-grid">
 
     {% for cancha in ultimas_canchas %}
-
         <div class="mini-card">
-
             {% if cancha.imagen %}
                 <img src="{{ cancha.imagen.url }}" class="mini-img">
             {% endif %}
 
             <div class="mini-info">
-
                 <strong>{{ cancha.nombre }}</strong>
-
                 <p>{{ cancha.deporte }}</p>
-
                 <span class="badge badge-info">
                     ${{ cancha.precio_por_hora }}
                 </span>
-
             </div>
-
         </div>
-
     {% empty %}
-
         <p>No hay canchas registradas.</p>
-
     {% endfor %}
 
 </div>
 
-<!-- ========================= -->
-<!-- RESERVAS -->
-<!-- ========================= -->
 <div class="section-title">Últimas reservas</div>
 
 <div class="mini-grid">
 
     {% for reserva in ultimas_reservas %}
-
         <div class="mini-card">
-
             <div class="mini-info">
-
                 <strong>{{ reserva.cancha.nombre }}</strong>
-
                 <p>{{ reserva.fecha }}</p>
-
                 <p>
                     {{ reserva.hora_inicio }}
                     -
                     {{ reserva.hora_fin }}
                 </p>
-
                 <span class="badge badge-info">
                     {{ reserva.jugadores.count }}/{{ reserva.capacidad }}
                 </span>
-
             </div>
-
         </div>
-
     {% empty %}
-
         <p>No hay reservas registradas.</p>
-
     {% endfor %}
 
 </div>
 
-<!-- ========================= -->
-<!-- LOGOUT -->
-<!-- ========================= -->
 <div class="dashboard-card logout-card">
-
     <form method="post" action="{% url 'logout' %}">
         {% csrf_token %}
-
         <button class="btn btn-danger">
             Cerrar sesión
         </button>
-
     </form>
-
 </div>
 
 {% else %}
 
 <div class="card">
-
     <h3>Acceso requerido</h3>
-
     <p>Debes iniciar sesión para continuar</p>
 
     <div class="dashboard-buttons">
-
         <a class="btn btn-info" href="{% url 'login' %}">
             Login
         </a>
-
         <a class="btn btn-success" href="{% url 'registro' %}">
             Registro
         </a>
-
     </div>
-
 </div>
 
 {% endif %}
-
 {% endblock %}

@@ -1,0 +1,87 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Usuario</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card" style="max-width: 500px; margin: auto; margin-top: 60px;">
+
+        <h1>Editar usuario</h1>
+
+        <h3>{{ usuario_obj.username }}</h3>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="card">
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <p>
+                <label>Usuario</label>
+                {{ form.username }}
+            </p>
+
+            <p>
+                <label>Correo</label>
+                {{ form.email }}
+            </p>
+
+            <p>
+                <label>Teléfono</label>
+                {{ form.telefono }}
+            </p>
+
+            <p>
+                <label>Ciudad</label>
+                {{ form.ciudad }}
+            </p>
+
+            <p>
+                <label>Deporte</label>
+                {{ form.deporte_favorito }}
+            </p>
+
+            <p>
+                <label>Nivel</label>
+                {{ form.nivel }}
+            </p>
+
+            <p>
+                <label>Administrador</label>
+                {{ form.is_superuser }}
+            </p>
+
+            <button type="submit">
+                Guardar cambios
+            </button>
+
+        </form>
+
+        <br>
+
+        <a class="btn" href="{% url 'admin_usuarios' %}">
+            Volver
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

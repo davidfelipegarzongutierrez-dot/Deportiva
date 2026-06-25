@@ -1,0 +1,51 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Eliminar Usuario</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card" style="max-width: 500px; margin: auto; margin-top: 60px;">
+
+        <h1>Eliminar usuario</h1>
+
+        <p>
+            ¿Deseas eliminar a:
+            <strong>{{ usuario_obj.username }}</strong>?
+        </p>
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="btn btn-danger">
+                Eliminar
+            </button>
+
+        </form>
+
+        <br>
+
+        <a
+            class="btn"
+            href="{% url 'admin_usuarios' %}">
+            Cancelar
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

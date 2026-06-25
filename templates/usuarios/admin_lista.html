@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Administrar Usuarios
+{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="card">
+            <p>{{ message }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<h1>Administración de Usuarios</h1>
+
+<div class="mini-grid">
+
+{% for usuario in usuarios %}
+
+<div class="mini-card">
+
+    {% if usuario.foto_perfil %}
+        <img
+            class="mini-img"
+            src="{{ usuario.foto_perfil.url }}"
+            alt="{{ usuario.username }}">
+    {% else %}
+        <div class="mini-img"
+             style="background:#1e293b;display:flex;align-items:center;justify-content:center;height:190px;">
+            <span style="font-size:40px;">👤</span>
+        </div>
+    {% endif %}
+
+    <div class="mini-info">
+
+        <h3>{{ usuario.username }}</h3>
+
+        <p>
+            <strong>Email:</strong>
+            {{ usuario.email|default:"Sin correo" }}
+        </p>
+
+        <p>
+            <strong>Ciudad:</strong>
+            {{ usuario.ciudad|default:"No especificada" }}
+        </p>
+
+        <p>
+            <strong>Deporte:</strong>
+            {{ usuario.get_deporte_favorito_display|default:"No especificado" }}
+        </p>
+
+        {% if usuario.is_superuser %}
+            <p style="color:#4ade80;font-weight:bold;">
+                Administrador
+            </p>
+        {% else %}
+            <p style="color:#facc15;font-weight:bold;">
+                Usuario
+            </p>
+        {% endif %}
+
+        <div class="acciones" style="margin-top:15px;">
+
+            <a
+                class="btn btn-warning"
+                href="{% url 'editar_usuario_admin' usuario.id %}">
+                Editar
+            </a>
+
+            <a
+                class="btn btn-danger"
+                href="{% url 'eliminar_usuario_admin' usuario.id %}">
+                Eliminar
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% empty %}
+
+<div class="card" style="grid-column: span 3;">
+    <p>No existen usuarios registrados.</p>
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}

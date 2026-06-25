@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load moneda %}
 
 {% block title %}
 Canchas disponibles
@@ -9,45 +10,25 @@ Canchas disponibles
 
 {% if messages %}
     {% for message in messages %}
-
         <div class="card">
             <p>{{ message }}</p>
         </div>
-
-    {% endfor %}
-{% endif %}
-
-{% if messages %}
-    {% for message in messages %}
-
-        <div class="card">
-
-            <p>
-                {{ message }}
-            </p>
-
-        </div>
-
     {% endfor %}
 {% endif %}
 
 <h1>Canchas disponibles</h1>
 
-<!-- PDF -->
 <div class="card">
     <a class="btn btn-info" href="{% url 'reporte_canchas_pdf' %}">
         Descargar PDF
     </a>
 </div>
 
-<!-- FILTROS -->
 <div class="card">
     <h3>Filtros</h3>
 
     <form method="get">
-
         <label>Deporte</label>
-
         <select name="deporte">
             <option value="">Todos</option>
             <option value="futbol">Fútbol</option>
@@ -72,11 +53,9 @@ Canchas disponibles
         <button type="submit" class="btn btn-info">
             Filtrar
         </button>
-
     </form>
 </div>
 
-<!-- ADMIN -->
 {% if user.is_superuser %}
 <div class="card">
     <a class="btn btn-success" href="{% url 'crear_cancha' %}">
@@ -85,31 +64,32 @@ Canchas disponibles
 </div>
 {% endif %}
 
-<!-- LISTA -->
+<div class="mini-grid">
+
 {% for cancha in canchas %}
 
-<div class="card cancha-card">
+<div class="mini-card">
 
     {% if cancha.imagen %}
-        <img class="cancha-img"
+        <img class="mini-img"
              src="{{ cancha.imagen.url }}"
              alt="{{ cancha.nombre }}">
     {% else %}
-        <img class="cancha-img"
+        <img class="mini-img"
              src="https://via.placeholder.com/600x250?text=GoSport"
              alt="Sin imagen">
     {% endif %}
 
-    <div class="cancha-info">
+    <div class="mini-info">
 
         <h3>{{ cancha.nombre }}</h3>
 
-        <p>Deporte: {{ cancha.deporte }}</p>
+        <p><strong>Deporte:</strong> {{ cancha.deporte }}</p>
 
-        <p>Precio: ${{ cancha.precio_por_hora }}</p>
+        <p><strong>Precio:</strong> {{ cancha.precio_por_hora|pesos }}</p>
 
         <p>
-            🕒 {{ cancha.hora_apertura }} - {{ cancha.hora_cierre }}
+            {{ cancha.hora_apertura }} - {{ cancha.hora_cierre }}
         </p>
 
         <p>
@@ -117,12 +97,12 @@ Canchas disponibles
         </p>
 
         {% if cancha.disponible %}
-            <p style="color:#4ade80;">Disponible</p>
+            <p style="color:#4ade80; font-weight: bold;">Disponible</p>
         {% else %}
-            <p style="color:#f87171;">No disponible</p>
+            <p style="color:#f87171; font-weight: bold;">No disponible</p>
         {% endif %}
 
-        <div class="acciones">
+        <div class="acciones" style="margin-top: 15px;">
 
             <a class="btn btn-info"
                href="{% url 'crear_reserva_desde_cancha' cancha.id %}">
@@ -149,10 +129,12 @@ Canchas disponibles
 
 {% empty %}
 
-<div class="card">
+<div class="card" style="grid-column: span 3;">
     <p>No hay canchas disponibles</p>
 </div>
 
 {% endfor %}
+
+</div>
 
 {% endblock %}
